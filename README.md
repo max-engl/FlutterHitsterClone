@@ -1,19 +1,11 @@
 # hitsterclone
+🕺🕺💃💃💃💃💃💃
 
-A new Flutter project.
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+HIsterrrrrrrrrrrrrrrrrrrrrrrr 
+HIsterrrrrrrrrrrrrrrrrrrrrrrr 
+HIsterrrrrrrrrrrrrrrrrrrrrrrr 😻😻😻😻😻😻😻😻😻😻😻😻😻😻😻😻😻😻😻😻😻😻😻
+😻😻😻😻😻😻😻😻🧚‍♀️🧚‍♀️🧚‍♀️🧚‍♀️🏃‍♀️🏃‍♀️🏃‍♀️🏃‍♀️
 
 
 ## Dream App
@@ -36,3 +28,4 @@ samples, guidance on mobile development, and a full API reference.
 ## Workflow
 
 - don't forget to convert new lists of songs to uri's
+- after a song is picked randomly it should be deleted from the game list, so that it isn't played again
