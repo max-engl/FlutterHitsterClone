@@ -1,8 +1,1206 @@
 [
-  {"title": "Bros",
-  "interpret": "Wolf Alice"
+  {
+    "title": "Upside Down",
+    "interpret": "Diana Ross"
   },
-  {"title": "Just Like Heaven"'
-  "interpret": "The Cure"
+  {
+    "title": "The Rhythm of the Night",
+    "interpret": "Corona"
+  },
+  {
+    "title": "Dancing On The Ceiling",
+    "interpret": "Lionel Richie"
+  },
+  {
+    "title": "Walk Of Life",
+    "interpret": "Dire Straits"
+  },
+  {
+    "title": "'74-'75",
+    "interpret": "The Connells"
+  },
+  {
+    "title": "Guajira Guantanamera",
+    "interpret": "Joseito Fernández"
+  },
+  {
+    "title": "Fly Away",
+    "interpret": "Lenny Kravitz"
+  },
+  {
+    "title": "I Love It",
+    "interpret": "Icona Pop, Charli xcx"
+  },
+  {
+    "title": "Rigoletto: \"La Donna E' Mobile\"",
+    "interpret": "Enrico Caruso"
+  },
+  {
+    "title": "Auld Lang Syne",
+    "interpret": "Frank C. Stanley"
+  },
+  {
+    "title": "Flashdance...What a Feeling - Radio Edit",
+    "interpret": "Irene Cara"
+  },
+  {
+    "title": "Big Yellow Taxi",
+    "interpret": "Joni Mitchell"
+  },
+  {
+    "title": "(We're Gonna) Rock Around The Clock",
+    "interpret": "Bill Haley & His Comets"
+  },
+  {
+    "title": "Life Is A Rollercoaster",
+    "interpret": "Ronan Keating"
+  },
+  {
+    "title": "Dilemma",
+    "interpret": "Nelly, Kelly Rowland"
+  },
+  {
+    "title": "Break My Heart",
+    "interpret": "Dua Lipa"
+  },
+  {
+    "title": "How You Remind Me",
+    "interpret": "Nickelback"
+  },
+  {
+    "title": "Over My Shoulder",
+    "interpret": "Mike + The Mechanics"
+  },
+  {
+    "title": "Summertime Blues",
+    "interpret": "Eddie Cochran"
+  },
+  {
+    "title": "Ring of Fire",
+    "interpret": "Johnny Cash"
+  },
+  {
+    "title": "Purple Rain",
+    "interpret": "Prince"
+  },
+  {
+    "title": "Fireflies",
+    "interpret": "Owl City"
+  },
+  {
+    "title": "Happy - From \"Despicable Me 2\"",
+    "interpret": "Pharrell Williams"
+  },
+  {
+    "title": "Raise Your Glass",
+    "interpret": "P!nk"
+  },
+  {
+    "title": "I'm a Believer - 2006 Remaster",
+    "interpret": "The Monkees"
+  },
+  {
+    "title": "A Little Respect - 2009 - Remaster",
+    "interpret": "Erasure"
+  },
+  {
+    "title": "Family Affair",
+    "interpret": "Mary J. Blige"
+  },
+  {
+    "title": "Circles",
+    "interpret": "Post Malone"
+  },
+  {
+    "title": "Dreams",
+    "interpret": "The Cranberries"
+  },
+  {
+    "title": "Dear Jessie",
+    "interpret": "Madonna"
+  },
+  {
+    "title": "Signed, Sealed, Delivered (I'm Yours)",
+    "interpret": "Stevie Wonder"
+  },
+  {
+    "title": "Sweet Home Alabama",
+    "interpret": "Lynyrd Skynyrd"
+  },
+  {
+    "title": "Ghetto Supastar (That is What You Are) (feat. Ol' Dirty Bastard & Mýa)",
+    "interpret": "Pras, Ol' Dirty Bastard, Mýa"
+  },
+  {
+    "title": "Call on Me - Radio Mix",
+    "interpret": "Eric Prydz"
+  },
+  {
+    "title": "Don't Leave Me This Way",
+    "interpret": "Thelma Houston"
+  },
+  {
+    "title": "Johnny B. Goode",
+    "interpret": "Chuck Berry"
+  },
+  {
+    "title": "She Drives Me Crazy",
+    "interpret": "Fine Young Cannibals"
+  },
+  {
+    "title": "Put Your Records On",
+    "interpret": "Corinne Bailey Rae"
+  },
+  {
+    "title": "Hey Ya!",
+    "interpret": "Outkast"
+  },
+  {
+    "title": "Shallow - Radio Edit",
+    "interpret": "Lady Gaga, Bradley Cooper"
+  },
+  {
+    "title": "There She Goes",
+    "interpret": "The La's"
+  },
+  {
+    "title": "I Heard It Through The Grapevine",
+    "interpret": "Marvin Gaye"
+  },
+  {
+    "title": "Habits (Stay High)",
+    "interpret": "Tove Lo"
+  },
+  {
+    "title": "Oh, Pretty Woman",
+    "interpret": "Roy Orbison"
+  },
+  {
+    "title": "Ready or Not",
+    "interpret": "Fugees, Ms. Lauryn Hill, Wyclef Jean, Pras"
+  },
+  {
+    "title": "Escape",
+    "interpret": "Enrique Iglesias"
+  },
+  {
+    "title": "Oops!...I Did It Again",
+    "interpret": "Britney Spears"
+  },
+  {
+    "title": "Teenage Dirtbag",
+    "interpret": "Wheatus"
+  },
+  {
+    "title": "One More Time - Radio Edit [Short Radio Edit]",
+    "interpret": "Daft Punk"
+  },
+  {
+    "title": "Jump Around",
+    "interpret": "House Of Pain"
+  },
+  {
+    "title": "I Can See Clearly Now - Edit",
+    "interpret": "Johnny Nash"
+  },
+  {
+    "title": "See You Later, Alligator",
+    "interpret": "Bill Haley & His Comets"
+  },
+  {
+    "title": "Never Ending Story",
+    "interpret": "Limahl"
+  },
+  {
+    "title": "Can't Hold Us (feat. Ray Dalton)",
+    "interpret": "Macklemore, Ryan Lewis, Macklemore & Ryan Lewis, Ray Dalton"
+  },
+  {
+    "title": "Torn",
+    "interpret": "Natalie Imbruglia"
+  },
+  {
+    "title": "You Can Call Me Al",
+    "interpret": "Paul Simon"
+  },
+  {
+    "title": "The Sign",
+    "interpret": "Ace of Base"
+  },
+  {
+    "title": "Iris",
+    "interpret": "The Goo Goo Dolls"
+  },
+  {
+    "title": "The Hustle",
+    "interpret": "Van McCoy"
+  },
+  {
+    "title": "I've Got a Woman",
+    "interpret": "Ray Charles"
+  },
+  {
+    "title": "More Than a Feeling",
+    "interpret": "Boston"
+  },
+  {
+    "title": "Wonderwall",
+    "interpret": "Oasis"
+  },
+  {
+    "title": "Crazy In Love (feat. JAY-Z)",
+    "interpret": "Beyoncé, JAY-Z"
+  },
+  {
+    "title": "No Diggity",
+    "interpret": "Blackstreet, Dr. Dre, Queen Pen"
+  },
+  {
+    "title": "Everyday",
+    "interpret": "Buddy Holly, The Crickets"
+  },
+  {
+    "title": "You Make Me Feel Like Dancing",
+    "interpret": "Leo Sayer"
+  },
+  {
+    "title": "All of Me",
+    "interpret": "John Legend"
+  },
+  {
+    "title": "Love Really Hurts Without You",
+    "interpret": "Billy Ocean"
+  },
+  {
+    "title": "Somewhere Only We Know",
+    "interpret": "Keane"
+  },
+  {
+    "title": "Right Here Waiting",
+    "interpret": "Richard Marx"
+  },
+  {
+    "title": "San Francisco (Be Sure to Wear Flowers in Your Hair) - Single Version",
+    "interpret": "Scott McKenzie"
+  },
+  {
+    "title": "Rescue Me",
+    "interpret": "Fontella Bass"
+  },
+  {
+    "title": "Sweet Dreams (Are Made of This) - 2005 Remaster",
+    "interpret": "Eurythmics, Annie Lennox, Dave Stewart"
+  },
+  {
+    "title": "Together Again",
+    "interpret": "Janet Jackson"
+  },
+  {
+    "title": "Royals",
+    "interpret": "Lorde"
+  },
+  {
+    "title": "Save Tonight",
+    "interpret": "Eagle-Eye Cherry"
+  },
+  {
+    "title": "Everything Is Everything",
+    "interpret": "Ms. Lauryn Hill"
+  },
+  {
+    "title": "FourFiveSeconds",
+    "interpret": "Rihanna, Kanye West, Paul McCartney"
+  },
+  {
+    "title": "Let Me Entertain You",
+    "interpret": "Robbie Williams"
+  },
+  {
+    "title": "Ca plane pour moi",
+    "interpret": "Plastic Bertrand"
+  },
+  {
+    "title": "The Twist",
+    "interpret": "Chubby Checker"
+  },
+  {
+    "title": "Your Love",
+    "interpret": "The Outfield"
+  },
+  {
+    "title": "Where Is The Love?",
+    "interpret": "Black Eyed Peas"
+  },
+  {
+    "title": "Levels - Radio Edit",
+    "interpret": "Avicii"
+  },
+  {
+    "title": "Informer",
+    "interpret": "Snow"
+  },
+  {
+    "title": "Bette Davis Eyes",
+    "interpret": "Kim Carnes"
+  },
+  {
+    "title": "Heaven",
+    "interpret": "Bryan Adams"
+  },
+  {
+    "title": "Adore You",
+    "interpret": "Harry Styles"
+  },
+  {
+    "title": "The Look",
+    "interpret": "Roxette"
+  },
+  {
+    "title": "Learn to Fly",
+    "interpret": "Foo Fighters"
+  },
+  {
+    "title": "Brother Louie",
+    "interpret": "Modern Talking"
+  },
+  {
+    "title": "The Letter",
+    "interpret": "The Box Tops"
+  },
+  {
+    "title": "Old Town Road",
+    "interpret": "Lil Nas X"
+  },
+  {
+    "title": "Waterfalls",
+    "interpret": "TLC"
+  },
+  {
+    "title": "How to Save a Life",
+    "interpret": "The Fray"
+  },
+  {
+    "title": "Lady - Hear Me Tonight",
+    "interpret": "Modjo"
+  },
+  {
+    "title": "Forever Young",
+    "interpret": "Alphaville"
+  },
+  {
+    "title": "Ain't That A Shame",
+    "interpret": "Fats Domino"
+  },
+  {
+    "title": "Volare (Nel Blu di Pinto di Blu)",
+    "interpret": "Gipsy Kings"
+  },
+  {
+    "title": "The Way I Are",
+    "interpret": "Timbaland, Keri Hilson, D.O.E."
+  },
+  {
+    "title": "She's so High",
+    "interpret": "Tal Bachman"
+  },
+  {
+    "title": "Set Fire to the Rain",
+    "interpret": "Adele"
+  },
+  {
+    "title": "Dancing In the Dark",
+    "interpret": "Bruce Springsteen"
+  },
+  {
+    "title": "World Hold on (Children of the Sky) [Radio Edit]",
+    "interpret": "Bob Sinclar, Steve Edwards"
+  },
+  {
+    "title": "Thunder",
+    "interpret": "Imagine Dragons"
+  },
+  {
+    "title": "Rehab",
+    "interpret": "Amy Winehouse"
+  },
+  {
+    "title": "Bleeding Love",
+    "interpret": "Leona Lewis"
+  },
+  {
+    "title": "Chandelier",
+    "interpret": "Sia"
+  },
+  {
+    "title": "Karma Chameleon",
+    "interpret": "Culture Club"
+  },
+  {
+    "title": "We Didn't Start the Fire",
+    "interpret": "Billy Joel"
+  },
+  {
+    "title": "How Bizarre",
+    "interpret": "OMC"
+  },
+  {
+    "title": "Say You Won't Let Go",
+    "interpret": "James Arthur"
+  },
+  {
+    "title": "Only Time",
+    "interpret": "Enya"
+  },
+  {
+    "title": "I Got You Babe",
+    "interpret": "Sonny & Cher"
+  },
+  {
+    "title": "Knock on Wood",
+    "interpret": "Eddie Floyd"
+  },
+  {
+    "title": "Africa",
+    "interpret": "TOTO"
+  },
+  {
+    "title": "If You Leave Me Now",
+    "interpret": "Chicago"
+  },
+  {
+    "title": "The Locomotion",
+    "interpret": "Little Eva"
+  },
+  {
+    "title": "Gimme! Gimme! Gimme! (A Man After Midnight)",
+    "interpret": "ABBA"
+  },
+  {
+    "title": "It's a Heartache",
+    "interpret": "Bonnie Tyler"
+  },
+  {
+    "title": "Easy",
+    "interpret": "Commodores"
+  },
+  {
+    "title": "Sing For The Moment",
+    "interpret": "Eminem"
+  },
+  {
+    "title": "Budapest",
+    "interpret": "George Ezra"
+  },
+  {
+    "title": "Don't Stop Believin'",
+    "interpret": "Journey"
+  },
+  {
+    "title": "Toosie Slide",
+    "interpret": "Drake"
+  },
+  {
+    "title": "Dancing in the Moonlight",
+    "interpret": "Toploader"
+  },
+  {
+    "title": "Smalltown Boy",
+    "interpret": "Bronski Beat"
+  },
+  {
+    "title": "Still D.R.E.",
+    "interpret": "Dr. Dre, Snoop Dogg"
+  },
+  {
+    "title": "Somebody That I Used To Know",
+    "interpret": "Gotye, Kimbra"
+  },
+  {
+    "title": "We Are Family - 1995 Remaster",
+    "interpret": "Sister Sledge"
+  },
+  {
+    "title": "Regulate",
+    "interpret": "Warren G, Nate Dogg"
+  },
+  {
+    "title": "Changes",
+    "interpret": "2Pac, Talent"
+  },
+  {
+    "title": "The Lazy Song",
+    "interpret": "Bruno Mars"
+  },
+  {
+    "title": "Murder On The Dancefloor",
+    "interpret": "Sophie Ellis-Bextor"
+  },
+  {
+    "title": "Piece of My Heart",
+    "interpret": "Erma Franklin"
+  },
+  {
+    "title": "Friday I'm In Love",
+    "interpret": "The Cure"
+  },
+  {
+    "title": "Follow Me",
+    "interpret": "Uncle Kracker"
+  },
+  {
+    "title": "Born To Be Wild",
+    "interpret": "Steppenwolf"
+  },
+  {
+    "title": "Jailhouse Rock",
+    "interpret": "Elvis Presley"
+  },
+  {
+    "title": "Señorita",
+    "interpret": "Shawn Mendes, Camila Cabello"
+  },
+  {
+    "title": "Waka Waka (This Time for Africa) [The Official 2010 FIFA World Cup (TM) Song] (feat. Freshlyground)",
+    "interpret": "Shakira, Freshlyground"
+  },
+  {
+    "title": "Under the Bridge",
+    "interpret": "Red Hot Chili Peppers"
+  },
+  {
+    "title": "Because the Night",
+    "interpret": "Patti Smith"
+  },
+  {
+    "title": "Tainted Love - Single Version",
+    "interpret": "Gloria Jones"
+  },
+  {
+    "title": "Got My Mind Set On You - Remastered 2004",
+    "interpret": "George Harrison"
+  },
+  {
+    "title": "Narcotic - Radio Edit",
+    "interpret": "Liquido"
+  },
+  {
+    "title": "Use Somebody",
+    "interpret": "Kings of Leon"
+  },
+  {
+    "title": "You Get What You Give",
+    "interpret": "New Radicals"
+  },
+  {
+    "title": "Only You",
+    "interpret": "Yazoo"
+  },
+  {
+    "title": "Do Wah Diddy Diddy",
+    "interpret": "Manfred Mann"
+  },
+  {
+    "title": "Più bella cosa",
+    "interpret": "Eros Ramazzotti"
+  },
+  {
+    "title": "You Make My Dreams (Come True)",
+    "interpret": "Daryl Hall & John Oates"
+  },
+  {
+    "title": "Return of the Mack",
+    "interpret": "Mark Morrison"
+  },
+  {
+    "title": "Mercy",
+    "interpret": "Duffy"
+  },
+  {
+    "title": "Say It Right",
+    "interpret": "Nelly Furtado"
+  },
+  {
+    "title": "Manic Monday",
+    "interpret": "The Bangles"
+  },
+  {
+    "title": "Holding Back the Years - 2008 Remaster",
+    "interpret": "Simply Red"
+  },
+  {
+    "title": "Nah Neh Nah",
+    "interpret": "Vaya Con Dios"
+  },
+  {
+    "title": "Make Your Own Kind Of Music",
+    "interpret": "Cass Elliot"
+  },
+  {
+    "title": "Jolene",
+    "interpret": "Dolly Parton"
+  },
+  {
+    "title": "La Bamba - Single Version",
+    "interpret": "Ritchie Valens"
+  },
+  {
+    "title": "Wrecking Ball",
+    "interpret": "Miley Cyrus"
+  },
+  {
+    "title": "A Thousand Miles - Single Version",
+    "interpret": "Vanessa Carlton"
+  },
+  {
+    "title": "Dream Lover",
+    "interpret": "Bobby Darin"
+  },
+  {
+    "title": "Start Me Up - Remastered 2009",
+    "interpret": "The Rolling Stones"
+  },
+  {
+    "title": "No More \"I Love You's\"",
+    "interpret": "Annie Lennox"
+  },
+  {
+    "title": "Stupidisco (Radio Edit)",
+    "interpret": "Junior Jack"
+  },
+  {
+    "title": "Pata Pata - Stereo Version",
+    "interpret": "Miriam Makeba"
+  },
+  {
+    "title": "Walking in Memphis",
+    "interpret": "Marc Cohn"
+  },
+  {
+    "title": "Show Me Heaven - From \"Days Of Thunder\"",
+    "interpret": "Maria McKee"
+  },
+  {
+    "title": "Heartbeats",
+    "interpret": "The Knife"
+  },
+  {
+    "title": "In Da Club",
+    "interpret": "50 Cent"
+  },
+  {
+    "title": "Baby Can I Hold You",
+    "interpret": "Tracy Chapman"
+  },
+  {
+    "title": "You Can Get It If You Really Want",
+    "interpret": "Jimmy Cliff"
+  },
+  {
+    "title": "Don't You Want Me",
+    "interpret": "The Human League"
+  },
+  {
+    "title": "Girlfriend - Radio Edit",
+    "interpret": "Avril Lavigne"
+  },
+  {
+    "title": "Feel It Still",
+    "interpret": "Portugal. The Man"
+  },
+  {
+    "title": "Sweet Child O' Mine",
+    "interpret": "Guns N' Roses"
+  },
+  {
+    "title": "She - Tous les visages de l’amour",
+    "interpret": "Charles Aznavour, Richard Galliano, Eddie Louiss"
+  },
+  {
+    "title": "Waiting On the World to Change",
+    "interpret": "John Mayer"
+  },
+  {
+    "title": "I Wanna Dance with Somebody (Who Loves Me)",
+    "interpret": "Whitney Houston"
+  },
+  {
+    "title": "Alive",
+    "interpret": "Pearl Jam"
+  },
+  {
+    "title": "Euphoria - Single Version",
+    "interpret": "Loreen"
+  },
+  {
+    "title": "December, 1963 (Oh What a Night!)",
+    "interpret": "The Four Seasons"
+  },
+  {
+    "title": "Mr. Jones",
+    "interpret": "Counting Crows"
+  },
+  {
+    "title": "You Make Me Feel (Mighty Real)",
+    "interpret": "Sylvester"
+  },
+  {
+    "title": "Everybody Hurts",
+    "interpret": "R.E.M."
+  },
+  {
+    "title": "I Got You (I Feel Good)",
+    "interpret": "James Brown & The Famous Flames"
+  },
+  {
+    "title": "Under Pressure - Remastered 2011",
+    "interpret": "Queen, David Bowie"
+  },
+  {
+    "title": "Waiting for a Star to Fall",
+    "interpret": "Boy Meets Girl"
+  },
+  {
+    "title": "With A Little Help From My Friends",
+    "interpret": "Joe Cocker"
+  },
+  {
+    "title": "You're So Vain",
+    "interpret": "Carly Simon"
+  },
+  {
+    "title": "Geronimo",
+    "interpret": "Sheppard"
+  },
+  {
+    "title": "Happy Together",
+    "interpret": "The Turtles"
+  },
+  {
+    "title": "Turn Me On",
+    "interpret": "Norah Jones"
+  },
+  {
+    "title": "Baby, I Love Your Way/Freebird",
+    "interpret": "Will To Power"
+  },
+  {
+    "title": "Pop Corn",
+    "interpret": "Gershon Kingsley"
+  },
+  {
+    "title": "Come As You Are",
+    "interpret": "Nirvana"
+  },
+  {
+    "title": "Basket Case",
+    "interpret": "Green Day"
+  },
+  {
+    "title": "Firework",
+    "interpret": "Katy Perry"
+  },
+  {
+    "title": "Up Around The Bend",
+    "interpret": "Creedence Clearwater Revival"
+  },
+  {
+    "title": "Move on Up - Single Edit",
+    "interpret": "Curtis Mayfield"
+  },
+  {
+    "title": "Believe",
+    "interpret": "Cher"
+  },
+  {
+    "title": "Respect",
+    "interpret": "Aretha Franklin"
+  },
+  {
+    "title": "Surfin' U.S.A. (Mono)",
+    "interpret": "The Beach Boys"
+  },
+  {
+    "title": "Lovefool - Radio Edit",
+    "interpret": "The Cardigans"
+  },
+  {
+    "title": "In the Mood - 2006 Remastered Version",
+    "interpret": "Glenn Miller"
+  },
+  {
+    "title": "That's Amore",
+    "interpret": "Dean Martin"
+  },
+  {
+    "title": "Be-Bop-A-Lula",
+    "interpret": "Gene Vincent, Gene Vincent & His Blue Caps"
+  },
+  {
+    "title": "Tequila",
+    "interpret": "The Champs"
+  },
+  {
+    "title": "Good Golly Miss Molly",
+    "interpret": "Little Richard"
+  },
+  {
+    "title": "The Wanderer",
+    "interpret": "Dion"
+  },
+  {
+    "title": "Surfin' Bird",
+    "interpret": "The Trashmen"
+  },
+  {
+    "title": "I Can't Help Myself (Sugar Pie, Honey Bunch)",
+    "interpret": "Four Tops"
+  },
+  {
+    "title": "When a Man Loves a Woman - Mono",
+    "interpret": "Percy Sledge"
+  },
+  {
+    "title": "Girl, You'll Be A Woman Soon",
+    "interpret": "Neil Diamond"
+  },
+  {
+    "title": "Build Me Up Buttercup",
+    "interpret": "The Foundations"
+  },
+  {
+    "title": "Come Together - Remastered 2009",
+    "interpret": "The Beatles"
+  },
+  {
+    "title": "Sugar Sugar",
+    "interpret": "The Archies"
+  },
+  {
+    "title": "Your Song",
+    "interpret": "Elton John"
+  },
+  {
+    "title": "In the Summertime",
+    "interpret": "Mungo Jerry"
+  },
+  {
+    "title": "Life on Mars? - 2015 Remaster",
+    "interpret": "David Bowie"
+  },
+  {
+    "title": "Live And Let Die",
+    "interpret": "Wings"
+  },
+  {
+    "title": "You're The First, The Last, My Everything",
+    "interpret": "Barry White"
+  },
+  {
+    "title": "I Love Rock N Roll",
+    "interpret": "The Arrows"
+  },
+  {
+    "title": "Let's Stick Together",
+    "interpret": "Bryan Ferry"
+  },
+  {
+    "title": "Disco Inferno",
+    "interpret": "The Trammps"
+  },
+  {
+    "title": "Born to Be Alive - Extended Version",
+    "interpret": "Patrick Hernandez"
+  },
+  {
+    "title": "Le Freak - 2018 Remaster",
+    "interpret": "CHIC"
+  },
+  {
+    "title": "Escape (The Pina Colada Song)",
+    "interpret": "Rupert Holmes"
+  },
+  {
+    "title": "Cruel to Be Kind",
+    "interpret": "Nick Lowe"
+  },
+  {
+    "title": "Celebration",
+    "interpret": "Kool & The Gang"
+  },
+  {
+    "title": "Super Freak",
+    "interpret": "Rick James"
+  },
+  {
+    "title": "White Wedding - Pt. 1",
+    "interpret": "Billy Idol"
+  },
+  {
+    "title": "Gloria",
+    "interpret": "Laura Branigan"
+  },
+  {
+    "title": "Give It Up",
+    "interpret": "KC & The Sunshine Band"
+  },
+  {
+    "title": "Every Breath You Take",
+    "interpret": "The Police"
+  },
+  {
+    "title": "Higher Love",
+    "interpret": "Steve Winwood"
+  },
+  {
+    "title": "Hungry Eyes - From \"Dirty Dancing\" Soundtrack",
+    "interpret": "Eric Carmen"
+  },
+  {
+    "title": "Sweetest Thing - Remastered 2007",
+    "interpret": "U2"
+  },
+  {
+    "title": "Lambada - Version 1989",
+    "interpret": "Kaoma"
+  },
+  {
+    "title": "I Drove All Night",
+    "interpret": "Cyndi Lauper"
+  },
+  {
+    "title": "Nothing Compares 2 U",
+    "interpret": "Sinéad O'Connor"
+  },
+  {
+    "title": "Ice Ice Baby",
+    "interpret": "Vanilla Ice"
+  },
+  {
+    "title": "The Best",
+    "interpret": "Tina Turner"
+  },
+  {
+    "title": "Iron Lion Zion - 7\" Mix",
+    "interpret": "Bob Marley & The Wailers"
+  },
+  {
+    "title": "Sing Hallelujah!",
+    "interpret": "Dr. Alban"
+  },
+  {
+    "title": "Mr. Vain",
+    "interpret": "Culture Beat"
+  },
+  {
+    "title": "I'd Do Anything For Love (But I Won't Do That)",
+    "interpret": "Meat Loaf"
+  },
+  {
+    "title": "Self Esteem",
+    "interpret": "The Offspring"
+  },
+  {
+    "title": "Hand in My Pocket - 2015 Remaster",
+    "interpret": "Alanis Morissette"
+  },
+  {
+    "title": "Mysterious Girl - Radio Edit",
+    "interpret": "Peter Andre"
+  },
+  {
+    "title": "Dance into the Light - 2016 Remaster",
+    "interpret": "Phil Collins"
+  },
+  {
+    "title": "Bitter Sweet Symphony",
+    "interpret": "The Verve"
+  },
+  {
+    "title": "Praise You",
+    "interpret": "Fatboy Slim"
+  },
+  {
+    "title": "911 (feat. Mary J. Blige) - Radio Edit",
+    "interpret": "Wyclef Jean, Mary J. Blige"
+  },
+  {
+    "title": "Seven Nation Army",
+    "interpret": "The White Stripes"
+  },
+  {
+    "title": "Numb / Encore",
+    "interpret": "JAY-Z, Linkin Park"
+  },
+  {
+    "title": "Talk",
+    "interpret": "Coldplay"
+  },
+  {
+    "title": "Gold Digger",
+    "interpret": "Kanye West, Jamie Foxx"
+  },
+  {
+    "title": "Crazy - Single Version",
+    "interpret": "Gnarls Barkley, CeeLo Green, Danger Mouse"
+  },
+  {
+    "title": "Human",
+    "interpret": "The Killers"
+  },
+  {
+    "title": "Poker Face",
+    "interpret": "Lady Gaga"
+  },
+  {
+    "title": "Sweet About Me",
+    "interpret": "Gabriella Cilmi"
+  },
+  {
+    "title": "You've Got The Love",
+    "interpret": "Florence + The Machine"
+  },
+  {
+    "title": "Whatcha Say",
+    "interpret": "Jason Derulo"
+  },
+  {
+    "title": "Dancing On My Own",
+    "interpret": "Robyn"
+  },
+  {
+    "title": "Price Tag",
+    "interpret": "Jessie J, B.o.B"
+  },
+  {
+    "title": "Moves Like Jagger - Studio Recording From \"The Voice\" Performance",
+    "interpret": "Maroon 5, Christina Aguilera"
+  },
+  {
+    "title": "Riptide",
+    "interpret": "Vance Joy"
+  },
+  {
+    "title": "All About That Bass",
+    "interpret": "Meghan Trainor"
+  },
+  {
+    "title": "Shut Up and Dance",
+    "interpret": "WALK THE MOON"
+  },
+  {
+    "title": "Lush Life",
+    "interpret": "Zara Larsson"
+  },
+  {
+    "title": "Don't Call Me Up",
+    "interpret": "Mabel"
+  },
+  {
+    "title": "Blinding Lights",
+    "interpret": "The Weeknd"
+  },
+  {
+    "title": "Everywhere - 2017 Remaster",
+    "interpret": "Fleetwood Mac"
+  },
+  {
+    "title": "(What A) Wonderful World - Mono",
+    "interpret": "Sam Cooke"
+  },
+  {
+    "title": "The Whole of the Moon - 2004 Remaster",
+    "interpret": "The Waterboys"
+  },
+  {
+    "title": "Dance Monkey",
+    "interpret": "Tones And I"
+  },
+  {
+    "title": "Ain't Nobody",
+    "interpret": "Rufus, Chaka Khan"
+  },
+  {
+    "title": "You Can't Hurry Love",
+    "interpret": "The Supremes"
+  },
+  {
+    "title": "Buffalo Stance - 12'' Mix",
+    "interpret": "Neneh Cherry"
+  },
+  {
+    "title": "Jump (For My Love)",
+    "interpret": "The Pointer Sisters"
+  },
+  {
+    "title": "Since U Been Gone",
+    "interpret": "Kelly Clarkson"
+  },
+  {
+    "title": "Dynamite",
+    "interpret": "Taio Cruz"
+  },
+  {
+    "title": "No One",
+    "interpret": "Alicia Keys"
+  },
+  {
+    "title": "Two Princes",
+    "interpret": "Spin Doctors"
+  },
+  {
+    "title": "Don't Dream It's Over",
+    "interpret": "Crowded House"
+  },
+  {
+    "title": "Someone You Loved",
+    "interpret": "Lewis Capaldi"
+  },
+  {
+    "title": "Closing Time",
+    "interpret": "Semisonic"
+  },
+  {
+    "title": "Anyone",
+    "interpret": "Justin Bieber"
+  },
+  {
+    "title": "drivers license",
+    "interpret": "Olivia Rodrigo"
+  },
+  {
+    "title": "Tubthumping",
+    "interpret": "Chumbawamba"
+  },
+  {
+    "title": "bad guy",
+    "interpret": "Billie Eilish"
+  },
+  {
+    "title": "Scars To Your Beautiful",
+    "interpret": "Alessia Cara"
+  },
+  {
+    "title": "These Boots Are Made For Walkin'",
+    "interpret": "Nancy Sinatra"
+  },
+  {
+    "title": "I Try",
+    "interpret": "Macy Gray"
+  },
+  {
+    "title": "Lollipop - Digitally Remastered",
+    "interpret": "The Chordettes"
+  },
+  {
+    "title": "Me Gustas Tu",
+    "interpret": "Manu Chao"
+  },
+  {
+    "title": "The Shoop Shoop Song (It's in His Kiss)",
+    "interpret": "Betty Everett"
+  },
+  {
+    "title": "Feeling Good",
+    "interpret": "Nina Simone"
   }
 ]

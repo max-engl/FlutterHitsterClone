@@ -1,0 +1,289 @@
+import 'dart:async';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:hitsterclone/SetupPage.dart';
+import 'package:provider/provider.dart';
+import 'package:hitsterclone/services/LogicService.dart';
+import 'package:hitsterclone/services/WebApiService.dart';
+import 'package:hitsterclone/BeforeGamePage.dart';
+
+class ArtistSelectionPage extends StatefulWidget {
+  const ArtistSelectionPage({super.key});
+
+  @override
+  State<ArtistSelectionPage> createState() => _ArtistSelectionPageState();
+}
+
+class _ArtistSelectionPageState extends State<ArtistSelectionPage> {
+  final TextEditingController _searchController = TextEditingController();
+  Timer? _debounce;
+  List<Artist> _results = [];
+  bool _isSearching = false;
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _performSearch(String query) async {
+    final trimmed = query.trim();
+    if (trimmed.isEmpty) {
+      setState(() {
+        _results = [];
+      });
+      return;
+    }
+
+    setState(() => _isSearching = true);
+
+    // Ensure token exists
+    String token = Logicservice().token;
+    if (token.isEmpty) {
+      final fetched = await WebApiService().fetchSpotifyAccessToken();
+      if (fetched == null || fetched.isEmpty) {
+        setState(() => _isSearching = false);
+        return;
+      }
+      WebApiService().setToken(fetched);
+    }
+
+    final artists = await WebApiService().searchArtist(trimmed);
+    setState(() {
+      _results = artists;
+      _isSearching = false;
+    });
+  }
+
+  void _onQueryChanged(String value) {
+    _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 350), () {
+      _performSearch(value);
+    });
+  }
+
+  Future<void> _selectArtist(Artist artist) async {
+    // Show progress dialog
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const AlertDialog(
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(height: 8),
+            CupertinoActivityIndicator(),
+            SizedBox(height: 12),
+            Text('Lade Künstler Songs…'),
+          ],
+        ),
+      ),
+    );
+
+    // Ensure token exists
+    String token = Logicservice().token;
+    if (token.isEmpty) {
+      final fetched = await WebApiService().fetchSpotifyAccessToken();
+      if (fetched == null || fetched.isEmpty) {
+        if (mounted) Navigator.of(context).pop();
+        return;
+      }
+      WebApiService().setToken(fetched);
+    }
+    print(
+      'Selected artist: ${artist.name} (id: ${artist.id}, imageUrl: ${artist.imageUrl})',
+    );
+    final tracks = await WebApiService().getArtistTrackUrisById(artist.id);
+
+    if (mounted) Navigator.of(context).pop();
+
+    if (tracks.isEmpty) return;
+    // Print artist details
+
+    // Save and navigate
+    Logicservice().setTracks(tracks);
+    Logicservice().setPlaylist(
+      Playlist(id: artist.id, name: artist.name, imageUrl: artist.imageUrl),
+    );
+    if (!mounted) return;
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => const SetupPage()),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<Logicservice>(
+      builder: (context, logic, _) {
+        return WillPopScope(
+          onWillPop: () async {
+            return true;
+          },
+          child: Scaffold(
+            extendBodyBehindAppBar: true,
+            appBar: AppBar(
+              foregroundColor: Colors.white,
+              title: const Text(
+                "Artist",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+            ),
+            body: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Color(0xFF9A7BFF),
+                    Color(0xFF7A5EFF),
+                    Color(0xFF5A3EFF),
+                  ],
+                ),
+              ),
+              child: SafeArea(
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: CupertinoTextField(
+                        controller: _searchController,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 14,
+                        ),
+                        placeholder: 'Suche nach Künstler...',
+                        placeholderStyle: const TextStyle(
+                          color: CupertinoColors.systemGrey,
+                        ),
+                        decoration: BoxDecoration(
+                          color: CupertinoColors.white,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        prefix: const Padding(
+                          padding: EdgeInsets.only(left: 12),
+                          child: Icon(
+                            CupertinoIcons.search,
+                            color: CupertinoColors.systemGrey,
+                          ),
+                        ),
+                        onChanged: _onQueryChanged,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    // Main white container (scrollable results)
+                    Expanded(
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 16,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.05),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 200),
+                          child: _isSearching
+                              ? const SizedBox(
+                                  height: 100,
+                                  child: Center(
+                                    child: CupertinoActivityIndicator(),
+                                  ),
+                                )
+                              : (_results.isEmpty
+                                    ? const SizedBox(
+                                        height: 100,
+                                        child: Center(
+                                          child: Text(
+                                            'Keine Ergebnisse',
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.black54,
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    : ListView.separated(
+                                        itemCount: _results.length,
+                                        separatorBuilder: (_, __) =>
+                                            const Divider(
+                                              height: 1,
+                                              thickness: 0.5,
+                                            ),
+                                        itemBuilder: (context, index) =>
+                                            _artistRow(
+                                              _results[index],
+                                              onTap: () => _selectArtist(
+                                                _results[index],
+                                              ),
+                                            ),
+                                      )),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  static Widget _artistRow(Artist artist, {VoidCallback? onTap}) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
+        splashColor: Colors.black12,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+          child: Row(
+            children: [
+              if (artist.imageUrl != null)
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image.network(
+                    artist.imageUrl!,
+                    width: 40,
+                    height: 40,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  artist.name,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+              const Icon(Icons.chevron_right, color: Colors.black38, size: 22),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
