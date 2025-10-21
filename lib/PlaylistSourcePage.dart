@@ -7,17 +7,9 @@ import 'package:hitsterclone/PlaylistSourcePage.dart';
 import 'package:hitsterclone/SearchPlaylistPage.dart';
 import 'package:provider/provider.dart';
 import 'package:hitsterclone/services/LogicService.dart';
-import 'package:hitsterclone/SpotifyAuthPage.dart';
 
 class PlaylistSourcePage extends StatelessWidget {
   const PlaylistSourcePage({super.key});
-
-  void _continueToSpotifyAuth(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const SpotifyAuthPage()),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {

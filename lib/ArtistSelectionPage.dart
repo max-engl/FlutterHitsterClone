@@ -5,7 +5,6 @@ import 'package:hitsterclone/SetupPage.dart';
 import 'package:provider/provider.dart';
 import 'package:hitsterclone/services/LogicService.dart';
 import 'package:hitsterclone/services/WebApiService.dart';
-import 'package:hitsterclone/BeforeGamePage.dart';
 
 class ArtistSelectionPage extends StatefulWidget {
   const ArtistSelectionPage({super.key});
@@ -236,9 +235,10 @@ class _ArtistSelectionPageState extends State<ArtistSelectionPage> {
                                         itemBuilder: (context, index) =>
                                             _artistRow(
                                               _results[index],
-                                              onTap: () => _confirmThenSelectArtist(
-                                                _results[index],
-                                              ),
+                                              onTap: () =>
+                                                  _confirmThenSelectArtist(
+                                                    _results[index],
+                                                  ),
                                             ),
                                       )),
                         ),

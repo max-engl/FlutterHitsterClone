@@ -8,7 +8,6 @@ import 'package:hitsterclone/GamePage.dart';
 import 'package:hitsterclone/PlaylistSourcePage.dart';
 import 'package:provider/provider.dart';
 import 'package:hitsterclone/services/LogicService.dart';
-import 'package:hitsterclone/SpotifyAuthPage.dart';
 import 'package:hitsterclone/services/WebApiService.dart';
 
 class SetupPage extends StatelessWidget {
