@@ -16,22 +16,15 @@ class SetupPage extends StatelessWidget {
   void _showMinimumPlayersDialog(BuildContext context) {
     showCupertinoDialog(
       context: context,
-      builder: (ctx) => CupertinoAlertDialog(
-        title: const Text('Mindestens 2 Spieler benötigt'),
-        content: const Padding(
+      builder: (ctx) => const CupertinoAlertDialog(
+        title: Text('Mindestens 2 Spieler benötigt'),
+        content: Padding(
           padding: EdgeInsets.only(top: 8.0),
           child: Text(
             'Bitte füge mindestens zwei Spieler hinzu, um zu starten.',
-            textAlign: TextAlign.center,
           ),
         ),
-        actions: [
-          CupertinoDialogAction(
-            isDefaultAction: true,
-            child: const Text('OK'),
-            onPressed: () => Navigator.of(ctx).pop(),
-          ),
-        ],
+        actions: [CupertinoDialogAction(child: Text('OK'))],
       ),
     );
   }
@@ -43,10 +36,7 @@ class SetupPage extends StatelessWidget {
         title: const Text('Playlist benötigt'),
         content: const Padding(
           padding: EdgeInsets.only(top: 8.0),
-          child: Text(
-            'Bitte wähle eine Playlist, um zu starten.',
-            textAlign: TextAlign.center,
-          ),
+          child: Text('Bitte wähle eine Playlist, um zu starten.'),
         ),
         actions: [
           CupertinoDialogAction(
@@ -82,13 +72,10 @@ class SetupPage extends StatelessWidget {
         title: const Text('Rundenanzahl benötigt'),
         content: Padding(
           padding: const EdgeInsets.only(top: 8.0),
-          child: Text(message, textAlign: TextAlign.center),
+          child: Text(message),
         ),
         actions: [
-          CupertinoDialogAction(
-            child: const Text('Abbrechen'),
-            onPressed: () => Navigator.of(ctx).pop(),
-          ),
+          CupertinoDialogAction(child: const Text('Abbrechen')),
           CupertinoDialogAction(
             isDefaultAction: true,
             child: const Text('Einstellen'),
@@ -114,44 +101,28 @@ class SetupPage extends StatelessWidget {
           builder: (ctx, setState) {
             return CupertinoAlertDialog(
               title: const Text('Runden Anzahl'),
-              content: Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SizedBox(
-                      height: 40,
-                      child: CupertinoTextField(
-                        controller: controller,
-                        keyboardType: const TextInputType.numberWithOptions(
-                          signed: false,
-                          decimal: false,
-                        ),
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
-                        ],
-                        placeholder: maxRounds > 0 ? '1 bis $maxRounds' : '1+',
-                        textAlign: TextAlign.center,
-                        autofocus: true,
-                        textInputAction: TextInputAction.done,
-                        onSubmitted: (_) {},
-                      ),
+              content: Column(
+                children: [
+                  const SizedBox(height: 8),
+                  SizedBox(
+                    height: 40,
+                    child: CupertinoTextField(
+                      controller: controller,
+                      keyboardType: const TextInputType.numberWithOptions(),
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      placeholder: maxRounds > 0 ? '1 bis $maxRounds' : '1+',
+                      textAlign: TextAlign.center,
+                      autofocus: true,
                     ),
-                    if (errorText != null) ...[
-                      const SizedBox(height: 6),
-                      Text(
-                        errorText!,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          color: CupertinoColors.systemRed,
-                          fontSize: 14,
-                        ),
-                      ),
-                    ],
+                  ),
+                  if (errorText != null) ...[
+                    const SizedBox(height: 6),
+                    Text(
+                      errorText!,
+                      style: const TextStyle(color: CupertinoColors.systemRed),
+                    ),
                   ],
-                ),
+                ],
               ),
               actions: [
                 CupertinoDialogAction(
@@ -162,18 +133,13 @@ class SetupPage extends StatelessWidget {
                   isDefaultAction: true,
                   child: const Text('Bestätigen'),
                   onPressed: () {
-                    final text = controller.text.trim();
-                    final value = int.tryParse(text);
+                    final value = int.tryParse(controller.text.trim());
                     if (value == null || value < 1) {
-                      setState(() {
-                        errorText = 'Bitte eine gültige Zahl (≥ 1) eingeben.';
-                      });
+                      setState(() => errorText = 'Zahl >= 1 erforderlich.');
                       return;
                     }
                     if (maxRounds > 0 && value > maxRounds) {
-                      setState(() {
-                        errorText = 'Maximal $maxRounds Runden möglich.';
-                      });
+                      setState(() => errorText = 'Maximal $maxRounds möglich.');
                       return;
                     }
                     logic.setRounds(value);
@@ -195,10 +161,7 @@ class SetupPage extends StatelessWidget {
         title: const Text('Spotify benötigt'),
         content: const Padding(
           padding: EdgeInsets.only(top: 8.0),
-          child: Text(
-            'Bitte verbinde dich mit Spotify, um das Spiel zu starten.',
-            textAlign: TextAlign.center,
-          ),
+          child: Text('Bitte verbinde dich mit Spotify.'),
         ),
         actions: [
           CupertinoDialogAction(
@@ -207,179 +170,33 @@ class SetupPage extends StatelessWidget {
           ),
           CupertinoDialogAction(
             isDefaultAction: true,
-            child: const Text('Mit Spotify verbinden'),
-            onPressed: () {
+            child: const Text('Verbinden'),
+            onPressed: () async {
               Navigator.of(ctx).pop();
-              _connectOrCheckSpotify(context);
+              final token = await WebApiService().fetchSpotifyAccessToken();
+              if (token == null || token.isEmpty) {
+                _showSpotifyRequiredDialog(context);
+              }
             },
           ),
         ],
       ),
     );
-  }
-
-  void _showActiveDeviceRequiredDialog(BuildContext context) {
-    showCupertinoDialog(
-      context: context,
-      builder: (ctx) => CupertinoAlertDialog(
-        title: const Text('Kein aktives Gerät gefunden'),
-        content: const Padding(
-          padding: EdgeInsets.only(top: 8.0),
-          child: Text(
-            'Bitte öffne Spotify auf einem Gerät und starte die Wiedergabe. Danach versuche es erneut.',
-            textAlign: TextAlign.center,
-          ),
-        ),
-        actions: [
-          CupertinoDialogAction(
-            isDefaultAction: true,
-            child: const Text('OK'),
-            onPressed: () => Navigator.of(ctx).pop(),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showDeviceSelectionRequiredDialog(BuildContext context) {
-    showCupertinoDialog(
-      context: context,
-      builder: (ctx) => CupertinoAlertDialog(
-        title: const Text('Gerät benötigt'),
-        content: const Padding(
-          padding: EdgeInsets.only(top: 8.0),
-          child: Text(
-            'Bitte wähle ein Gerät, um das Spiel zu starten.',
-            textAlign: TextAlign.center,
-          ),
-        ),
-        actions: [
-          CupertinoDialogAction(
-            child: const Text('Abbrechen'),
-            onPressed: () => Navigator.of(ctx).pop(),
-          ),
-          CupertinoDialogAction(
-            isDefaultAction: true,
-            child: const Text('Gerät wählen'),
-            onPressed: () {
-              Navigator.of(ctx).pop();
-              _connectOrCheckSpotify(context);
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  Future<void> _connectOrCheckSpotify(BuildContext context) async {
-    // Try to authorize if token is missing, otherwise refresh device status
-    try {
-      String token = Logicservice().token;
-      if (token.isEmpty) {
-        final fetched = await WebApiService().fetchSpotifyAccessToken();
-        if (fetched == null || fetched.isEmpty) {
-          _showSpotifyRequiredDialog(context);
-          return;
-        }
-        WebApiService().setToken(fetched);
-      }
-
-      // Refresh connection, then fetch available devices and let user choose
-      await WebApiService().ensureConnected(force: true);
-      final devices = await WebApiService().getDevices();
-
-      if (devices.isEmpty) {
-        _showActiveDeviceRequiredDialog(context);
-        return;
-      }
-
-      final selectedDevice =
-          await showCupertinoModalPopup<Map<String, dynamic>>(
-            context: context,
-            builder: (ctx) {
-              return CupertinoActionSheet(
-                title: const Text('Gerät wählen'),
-                message: const Text(
-                  'Wähle ein Spotify Gerät für die Wiedergabe.',
-                ),
-                actions: devices.map((d) {
-                  final name = (d['name'] as String?) ?? 'Unbekannt';
-                  final type = (d['type'] as String?) ?? '';
-                  final isActive = d['is_active'] == true;
-                  final label = isActive
-                      ? '$name${type.isNotEmpty ? ' • $type' : ''} (aktiv)'
-                      : '$name${type.isNotEmpty ? ' • $type' : ''}';
-                  return CupertinoActionSheetAction(
-                    onPressed: () => Navigator.of(ctx).pop(d),
-                    child: Text(label),
-                  );
-                }).toList(),
-                cancelButton: CupertinoActionSheetAction(
-                  onPressed: () => Navigator.of(ctx).pop(),
-                  child: const Text('Abbrechen'),
-                ),
-              );
-            },
-          );
-
-      if (selectedDevice != null) {
-        final id = selectedDevice['id'] as String?;
-        final name = (selectedDevice['name'] as String?) ?? 'Gerät';
-        if (id != null) {
-          final ok = await WebApiService().transferPlaybackTo(id, play: true);
-          await WebApiService().ensureConnected(force: true);
-          if (ok) {
-            Logicservice().setPreferredDeviceId(id);
-            Logicservice().setCurrentDeviceName(name);
-          }
-
-          await showCupertinoDialog(
-            context: context,
-            builder: (ctx) => CupertinoAlertDialog(
-              title: const Text('Gerät ausgewählt'),
-              content: Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: Text(
-                  ok
-                      ? 'Wiedergabe auf "$name" gestartet.'
-                      : 'Gerät konnte nicht aktiviert werden.',
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              actions: [
-                CupertinoDialogAction(
-                  isDefaultAction: true,
-                  child: const Text('OK'),
-                  onPressed: () => Navigator.of(ctx).pop(),
-                ),
-              ],
-            ),
-          );
-        }
-      }
-    } catch (e) {
-      _showSpotifyRequiredDialog(context);
-    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<Logicservice>(
       builder: (context, logic, _) {
-        // Clamp rounds to the available tracks length if needed
+        final bool isAuthorized = logic.token.isNotEmpty;
+        final String spotifyStatus = isAuthorized
+            ? 'Verbunden'
+            : 'Nicht verbunden';
+
         final int maxRounds = logic.tracks.length;
-        final int currentRounds = logic.rounds;
-        if (currentRounds > maxRounds && maxRounds > 0) {
+        if (logic.rounds > maxRounds && maxRounds > 0) {
           logic.setRounds(maxRounds);
         }
-
-        final bool isAuthorized = logic.token.isNotEmpty;
-        final bool isConnected = logic.connected;
-        final String spotifyStatus = !isAuthorized
-            ? 'Nicht verbunden'
-            : (isConnected ? 'Verbunden' : 'Verbunden');
-
-        final String deviceName = logic.currentDeviceName ?? '';
 
         return Scaffold(
           extendBodyBehindAppBar: true,
@@ -398,25 +215,20 @@ class SetupPage extends StatelessWidget {
             child: SafeArea(
               child: Column(
                 children: [
-                  Text(
+                  const Text(
                     "HIPSTER",
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 50,
                       fontWeight: FontWeight.w900,
                       color: Colors.white,
-                      letterSpacing: 1.2,
                     ),
                   ),
-
                   const Text(
                     'MUSIK. WISSEN. SPASS.',
-                    textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.white70,
                       fontWeight: FontWeight.w500,
-                      letterSpacing: 1.1,
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -429,11 +241,7 @@ class SetupPage extends StatelessWidget {
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(16),
                       boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.05),
-                          blurRadius: 8,
-                          offset: const Offset(0, 2),
-                        ),
+                        BoxShadow(color: Colors.black26, blurRadius: 6),
                       ],
                     ),
                     child: Column(
@@ -442,36 +250,33 @@ class SetupPage extends StatelessWidget {
                           FontAwesomeIcons.spotify,
                           "Spotify",
                           spotifyStatus,
-                          onTap: () => _connectOrCheckSpotify(context),
-                        ),
-                        const Divider(height: 1, thickness: 0.5),
-                        _settingsRow(
-                          "📱",
-                          "Device",
-                          deviceName,
-                          onTap: () => _connectOrCheckSpotify(context),
+                          onTap: () async {
+                            final token = await WebApiService()
+                                .fetchSpotifyAccessToken();
+                            if (token == null || token.isEmpty) {
+                              _showSpotifyRequiredDialog(context);
+                            }
+                          },
                         ),
                         const Divider(height: 1, thickness: 0.5),
                         _settingsRow(
                           "🫱",
                           "Spieler",
-                          Logicservice().players.length.toString(),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const AddPlayersPage(),
-                              ),
-                            );
-                          },
+                          logic.players.length.toString(),
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const AddPlayersPage(),
+                            ),
+                          ),
                         ),
                         const Divider(height: 1, thickness: 0.5),
                         _settingsRow(
                           "📀",
                           "Playlist",
-                          Logicservice().playlist?.name ?? '',
+                          logic.playlist?.name ?? '',
                           onTap: () {
-                            if (Logicservice().token.isEmpty) {
+                            if (!isAuthorized) {
                               _showSpotifyRequiredDialog(context);
                               return;
                             }
@@ -497,66 +302,31 @@ class SetupPage extends StatelessWidget {
                   const Spacer(),
                   ElevatedButton(
                     onPressed: () async {
-                      final playerCount = logic.players.length;
-                      if (playerCount < 2) {
+                      if (logic.players.length < 2) {
                         _showMinimumPlayersDialog(context);
                         return;
                       }
-
                       if (logic.playlist == null) {
                         _showPlaylistRequiredDialog(context);
                         return;
                       }
-
-                      final int maxRounds = logic.tracks.length;
-                      final int rounds = logic.rounds;
-                      if (maxRounds < 1) {
-                        _showPlaylistRequiredDialog(context);
-                        return;
-                      }
-                      if (rounds < 1 || rounds > maxRounds) {
-                        _showRoundsRequiredDialog(context, logic);
-                        return;
-                      }
-
-                      // Require Spotify auth and a selected device
-                      if (logic.token.isEmpty) {
+                      if (!isAuthorized) {
                         _showSpotifyRequiredDialog(context);
-                        return;
-                      }
-                      if (logic.preferredDeviceId == null) {
-                        _showDeviceSelectionRequiredDialog(context);
-                        return;
-                      }
-
-                      final hasActive = await WebApiService()
-                          .ensureActiveDevice(force: true);
-                      if (!hasActive) {
-                        _showActiveDeviceRequiredDialog(context);
                         return;
                       }
 
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => GamePage(rounds: rounds),
+                          builder: (context) => GamePage(rounds: logic.rounds),
                         ),
                       );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
                       foregroundColor: Colors.black,
-                      elevation: 1,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 30,
-                        vertical: 14,
-                      ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
-                      ),
-                      textStyle: const TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
                       ),
                     ),
                     child: const Text("Spiel starten"),
@@ -571,7 +341,7 @@ class SetupPage extends StatelessWidget {
   }
 
   static Widget _settingsRow(
-    dynamic icon, // String emoji OR IconData
+    dynamic icon,
     String title,
     String value, {
     VoidCallback? onTap,
@@ -592,7 +362,6 @@ class SetupPage extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
-                  color: Colors.black,
                 ),
               ),
             ),

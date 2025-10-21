@@ -20,7 +20,6 @@ class SpotifyService {
   }
 
   Future<bool> playSong(String trackUri) async {
-    await WebApiService().ensureActiveDevice(force: true);
     final ok = await WebApiService().startPlaybackWithUris([trackUri]);
     if (ok) {
       _lastPlayedSongUri = trackUri;

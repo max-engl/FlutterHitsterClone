@@ -108,10 +108,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
           });
           return;
         }
-        api.setToken(fetchedToken);
-      } else {
-        api.setToken(token);
-      }
+      } else {}
 
       final fetched = await api.getUserPlaylists();
       setState(() {

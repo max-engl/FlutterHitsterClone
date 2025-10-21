@@ -45,7 +45,6 @@ class _ArtistSelectionPageState extends State<ArtistSelectionPage> {
         setState(() => _isSearching = false);
         return;
       }
-      WebApiService().setToken(fetched);
     }
 
     final artists = await WebApiService().searchArtist(trimmed);
@@ -96,7 +95,6 @@ class _ArtistSelectionPageState extends State<ArtistSelectionPage> {
         if (mounted) Navigator.of(context).pop();
         return;
       }
-      WebApiService().setToken(fetched);
     }
     print(
       'Selected artist: ${artist.name} (id: ${artist.id}, imageUrl: ${artist.imageUrl})',

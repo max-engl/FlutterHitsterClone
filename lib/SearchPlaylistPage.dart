@@ -45,7 +45,6 @@ class _SearchPlaylistPageState extends State<SearchPlaylistPage> {
         setState(() => _isSearching = false);
         return;
       }
-      WebApiService().setToken(fetched);
     }
 
     final playlists = await WebApiService().searchPublicPlaylists(trimmed);
@@ -96,7 +95,6 @@ class _SearchPlaylistPageState extends State<SearchPlaylistPage> {
         if (mounted) Navigator.of(context).pop();
         return;
       }
-      WebApiService().setToken(fetched);
     }
 
     final tracks = await WebApiService().getPlaylistTracks(playlist.id);
