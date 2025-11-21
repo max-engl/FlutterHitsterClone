@@ -40,7 +40,12 @@ extension _GamePageLogic on _GamePageState {
       lastGuessCorrect = null; // Reset last guess result
     });
     _triggerAnimation();
-    SpotifyService().pauseSong();
+    if (Logicservice().musicService == 'spotify') {
+      SpotifyService().pauseSong();
+    } else {
+      AppleMusicService().pauseSong();
+      print('AM debug: paused before countdown, tracks=${Logicservice().tracks.length}, yetToPlay=${Logicservice().trackYetToPlay.length}');
+    }
     _timer = Timer.periodic(Duration(seconds: 1), (timer) async {
       setState(() {
         countdown = countdown! - 1;
@@ -52,15 +57,31 @@ extension _GamePageLogic on _GamePageState {
       });
 
       if (countdown! <= 0) {
-        Track? songInfo = await SpotifyService().playRandomSong();
-        if (songInfo != null) {
-          setState(() {
-            currentSong = songInfo;
-          });
+        if (Logicservice().musicService == 'spotify') {
+          final songInfo = await SpotifyService().playRandomSong();
+          if (songInfo != null) {
+            setState(() {
+              currentSong = songInfo;
+            });
+          } else {
+            setState(() {
+              currentSong = null;
+            });
+          }
         } else {
-          setState(() {
-            currentSong = null; // Handle no-track case
-          });
+          print('AM debug: attempting to play random song from ${Logicservice().trackYetToPlay.length} pending tracks');
+          final songInfo = await AppleMusicService().playRandomSong();
+          if (songInfo != null) {
+            print('AM debug: now playing id=${songInfo.id} name=${songInfo.name} uri=${songInfo.uri}');
+            setState(() {
+              currentSong = songInfo;
+            });
+          } else {
+            print('AM debug: playRandomSong returned null');
+            setState(() {
+              currentSong = null; // Handle no-track case
+            });
+          }
         }
       }
     });
@@ -73,7 +94,12 @@ extension _GamePageLogic on _GamePageState {
       countdown = 5; // Set 5 second countdown for guess result
     });
     _triggerAnimation();
-    SpotifyService().pauseSong();
+    if (Logicservice().musicService == 'spotify') {
+      SpotifyService().pauseSong();
+    } else {
+      AppleMusicService().pauseSong();
+      print('AM debug: paused for guess');
+    }
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
       setState(() {
         countdown = countdown! - 1;
@@ -88,7 +114,12 @@ extension _GamePageLogic on _GamePageState {
 
           _triggerAnimation();
           if (currentSong != null) {
-            SpotifyService().resumeSong();
+            if (Logicservice().musicService == 'spotify') {
+              SpotifyService().resumeSong();
+            } else {
+              AppleMusicService().resumeSong();
+              print('AM debug: resumed after reveal, current=${currentSong?.name}');
+            }
           }
         }
       });

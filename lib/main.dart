@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hitsterclone/AppleTestPage.dart';
 import 'package:hitsterclone/SetupPage.dart';
 import 'package:hitsterclone/StartUpPage.dart';
 import 'package:hitsterclone/services/LogicService.dart';
@@ -25,11 +26,7 @@ class MyApp extends StatelessWidget {
               final ready = snapshot.connectionState == ConnectionState.done;
               return MaterialApp(
                 title: 'Hipster Clone',
-                home: ready
-                    ? (logic.hasSeenStartup
-                          ? const SetupPage()
-                          : const StartUpPage())
-                    : const Scaffold(body: SizedBox()),
+                home: SetupPage(),
                 debugShowCheckedModeBanner: false,
               );
             },

@@ -22,6 +22,10 @@ class Logicservice extends ChangeNotifier {
   bool _connected = false;
   String _token = '';
 
+  // Music service selection: 'spotify' or 'apple'
+  String _musicService = 'spotify';
+  static const String _musicServiceKey = 'music_service';
+
   // NEW
   String? _activeDeviceId;
   String? _availableDeviceId;
@@ -31,6 +35,7 @@ class Logicservice extends ChangeNotifier {
 
   bool get connected => _connected;
   String get token => _token;
+  String get musicService => _musicService;
 
   List<Track> get tracks => _tracks;
   List<Track> get trackYetToPlay => _trackYetToPlay;
@@ -78,6 +83,13 @@ class Logicservice extends ChangeNotifier {
   void setToken(String newToken) {
     _token = newToken;
     notifyListeners();
+  }
+
+  void setMusicService(String service) {
+    if (service != 'spotify' && service != 'apple') return;
+    _musicService = service;
+    notifyListeners();
+    _saveMusicService();
   }
 
   void setConnected(bool newConnected) {
@@ -148,7 +160,11 @@ class Logicservice extends ChangeNotifier {
   }
 
   Future<void> _initialize() async {
-    await Future.wait([_loadPlayers(), _loadStartupFlag()]);
+    await Future.wait([
+      _loadPlayers(),
+      _loadStartupFlag(),
+      _loadMusicService(),
+    ]);
   }
 
   Future<void> markStartupSeen() async {
@@ -157,6 +173,23 @@ class Logicservice extends ChangeNotifier {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool(_hasSeenStartupKey, true);
+    } catch (_) {}
+  }
+
+  Future<void> _saveMusicService() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(_musicServiceKey, _musicService);
+    } catch (_) {}
+  }
+
+  Future<void> _loadMusicService() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final saved = prefs.getString(_musicServiceKey);
+      if (saved == 'spotify' || saved == 'apple') {
+        _musicService = saved!;
+      }
     } catch (_) {}
   }
 }

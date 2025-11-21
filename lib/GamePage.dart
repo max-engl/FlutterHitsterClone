@@ -9,6 +9,7 @@ import 'package:gif/gif.dart';
 import 'package:hitsterclone/SetupPage.dart';
 import 'package:hitsterclone/services/LogicService.dart';
 import 'package:hitsterclone/services/SpotifyService.dart';
+import 'package:hitsterclone/services/AppleMusicService.dart';
 import 'package:hitsterclone/services/WebApiService.dart';
 import 'package:provider/provider.dart';
 part 'game/game_page_logic.dart';
