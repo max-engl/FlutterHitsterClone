@@ -6,9 +6,9 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gif/gif.dart';
+import 'package:confetti/confetti.dart';
 import 'package:hitsterclone/SetupPage.dart';
 import 'package:hitsterclone/services/LogicService.dart';
-import 'package:hitsterclone/services/SpotifyService.dart';
 import 'package:hitsterclone/services/AppleMusicService.dart';
 import 'package:hitsterclone/services/WebApiService.dart';
 import 'package:provider/provider.dart';
@@ -36,6 +36,9 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   String _currentGif = "assets/gifs/xz.gif"; // Default GIF
+  late ConfettiController _confettiController;
+  late AnimationController _winnerPulseController;
+  late Animation<double> _winnerPulseAnimation;
 
   // Gradient palette and current gradient
   final List<LinearGradient> _gradientPalette = const [
@@ -373,6 +376,15 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
     );
     _animationController.forward();
 
+    _confettiController = ConfettiController(duration: Duration(seconds: 3));
+    _winnerPulseController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 900),
+    )..repeat(reverse: true);
+    _winnerPulseAnimation = Tween<double>(begin: 0.95, end: 1.08).animate(
+      CurvedAnimation(parent: _winnerPulseController, curve: Curves.easeInOut),
+    );
+
     // Select a random GIF
     _currentGif = _getRandomGif();
 
@@ -395,6 +407,8 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
     _timer?.cancel();
     _controller.dispose();
     _animationController.dispose();
+    _confettiController.dispose();
+    _winnerPulseController.dispose();
     super.dispose();
   }
 
@@ -629,7 +643,13 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
             builder: (context, value, child) {
               return Transform.scale(
                 scale: value,
-                child: Text("$countdown", style: countdownStyle),
+                child: Center(
+                  child: Text(
+                    "$countdown",
+                    style: countdownStyle,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
               );
             },
           ),
@@ -920,6 +940,9 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
 
         break;
       case 5: // Game over state
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _confettiController.play();
+        });
         stateWidget = Container(
           padding: EdgeInsets.all(kLargePadding),
           margin: EdgeInsets.symmetric(horizontal: kDefaultPadding),
@@ -945,10 +968,26 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
                 ),
                 SizedBox(height: kDefaultSpacing),
                 if (_getWinners().length == 1)
-                  Text(
-                    "${_getWinners().first.toUpperCase()} GEWINNT!",
-                    style: subheadingStyle,
-                    textAlign: TextAlign.center,
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ScaleTransition(
+                          scale: _winnerPulseAnimation,
+                          child: Text(
+                            _getWinners().first.toUpperCase(),
+                            style: subheadingStyle.copyWith(fontSize: 36),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        Text(
+                          " GEWINNT!",
+                          style: subheadingStyle.copyWith(fontSize: 36),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
                   )
                 else
                   Text(
@@ -1005,38 +1044,56 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
         duration: const Duration(milliseconds: 700),
         curve: Curves.easeInOut,
         decoration: BoxDecoration(gradient: _currentGradient),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Text(
-                  "HIPSTER",
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 50,
-                    fontWeight: FontWeight.w900,
-                    color: Colors.white,
-                    letterSpacing: 1.2,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Container(
-                  margin: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 16,
-                  ),
-
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: FadeTransition(
-                      opacity: _fadeAnimation,
-                      child: stateWidget,
+        child: Stack(
+          children: [
+            SafeArea(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Text(
+                      "HIPSTER",
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 50,
+                        fontWeight: FontWeight.w900,
+                        color: Colors.white,
+                        letterSpacing: 1.2,
+                      ),
                     ),
-                  ),
+                    const SizedBox(height: 16),
+                    Container(
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 16,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: FadeTransition(
+                          opacity: _fadeAnimation,
+                          child: stateWidget,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
+            Align(
+              alignment: Alignment.topCenter,
+              child: IgnorePointer(
+                child: ConfettiWidget(
+                  confettiController: _confettiController,
+                  blastDirection: pi / 2,
+                  emissionFrequency: 0.08,
+                  numberOfParticles: 12,
+                  maxBlastForce: 20,
+                  minBlastForce: 5,
+                  gravity: 0.25,
+                  shouldLoop: true,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

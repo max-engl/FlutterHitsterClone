@@ -72,6 +72,12 @@ class SetupPage extends StatelessWidget {
     );
   }
 
+  Future<void> _connectAppleMusic(BuildContext context) async {
+    try {
+      await AppleMusicService().authorize();
+    } catch (_) {}
+  }
+
   void _chooseMusicService(BuildContext context) async {
     final selected = await showCupertinoModalPopup<String>(
       context: context,
@@ -224,11 +230,11 @@ class SetupPage extends StatelessWidget {
     showCupertinoDialog(
       context: context,
       builder: (ctx) => CupertinoAlertDialog(
-        title: const Text('Spotify benötigt'),
+        title: const Text('Apple Music benötigt'),
         content: const Padding(
           padding: EdgeInsets.only(top: 8.0),
           child: Text(
-            'Bitte verbinde dich mit Spotify, um das Spiel zu starten.',
+            'Bitte verbinde dich mit Apple Music, um das Spiel zu starten.',
             textAlign: TextAlign.center,
           ),
         ),
@@ -239,10 +245,10 @@ class SetupPage extends StatelessWidget {
           ),
           CupertinoDialogAction(
             isDefaultAction: true,
-            child: const Text('Mit Spotify verbinden'),
-            onPressed: () {
+            child: const Text('Mit Apple Music verbinden'),
+            onPressed: () async {
               Navigator.of(ctx).pop();
-              _connectOrCheckSpotify(context);
+              await _connectAppleMusic(context);
             },
           ),
         ],
@@ -405,10 +411,7 @@ class SetupPage extends StatelessWidget {
           logic.setRounds(maxRounds);
         }
 
-        final bool isAuthorized = logic.token.isNotEmpty;
         final bool isConnected = logic.connected;
-        final bool useSpotify = logic.musicService == 'spotify';
-        final String serviceLabel = useSpotify ? 'Spotify' : 'Apple Music';
         final String deviceName = logic.currentDeviceName ?? '';
 
         return Scaffold(
@@ -469,19 +472,12 @@ class SetupPage extends StatelessWidget {
                     child: Column(
                       children: [
                         _settingsRow(
-                          FontAwesomeIcons.headphones,
-                          "Musikdienst",
-                          serviceLabel,
-                          onTap: () => _chooseMusicService(context),
+                          FontAwesomeIcons.apple,
+                          "Apple Music",
+                          isConnected ? 'Verbunden' : 'Nicht verbunden',
+                          onTap: () => _connectAppleMusic(context),
                         ),
-                        const Divider(height: 1, thickness: 0.5),
-                        if (useSpotify)
-                          _settingsRow(
-                            "📱",
-                            "Device",
-                            deviceName,
-                            onTap: () => _connectOrCheckSpotify(context),
-                          ),
+
                         const Divider(height: 1, thickness: 0.5),
                         _settingsRow(
                           "🫱",
@@ -502,10 +498,6 @@ class SetupPage extends StatelessWidget {
                           "Playlist",
                           Logicservice().playlist?.name ?? '',
                           onTap: () {
-                            if (useSpotify && Logicservice().token.isEmpty) {
-                              _showSpotifyRequiredDialog(context);
-                              return;
-                            }
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -550,23 +542,7 @@ class SetupPage extends StatelessWidget {
                         return;
                       }
 
-                      if (useSpotify) {
-                        if (logic.token.isEmpty) {
-                          _showSpotifyRequiredDialog(context);
-                          return;
-                        }
-                        if (logic.preferredDeviceId == null) {
-                          _showDeviceSelectionRequiredDialog(context);
-                          return;
-                        }
-
-                        final hasActive = await WebApiService()
-                            .ensureActiveDevice(force: true);
-                        if (!hasActive) {
-                          _showActiveDeviceRequiredDialog(context);
-                          return;
-                        }
-                      }
+                      // Apple Music only: no Spotify device checks
 
                       Navigator.push(
                         context,
@@ -615,7 +591,7 @@ class SetupPage extends StatelessWidget {
         child: Row(
           children: [
             icon is IconData
-                ? Icon(icon, size: 22, color: Color.fromRGBO(27, 203, 82, 1))
+                ? Icon(icon, size: 22, color: Color.fromRGBO(226, 51, 55, 1))
                 : Text(icon, style: const TextStyle(fontSize: 22)),
             const SizedBox(width: 12),
             Expanded(

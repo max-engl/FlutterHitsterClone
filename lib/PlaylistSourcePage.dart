@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:hitsterclone/AddPlayersPage.dart';
 import 'package:hitsterclone/ArtistSelectionPage.dart';
 import 'package:hitsterclone/PlaylistScreen.dart';
-import 'package:hitsterclone/AppleTestPage.dart';
+import 'package:hitsterclone/AppleLibraryPlaylistsPage.dart';
+import 'package:hitsterclone/AppleCatalogPlaylistsPage.dart';
 import 'package:hitsterclone/PlaylistSourcePage.dart';
 import 'package:hitsterclone/SearchPlaylistPage.dart';
 import 'package:provider/provider.dart';
@@ -16,7 +17,7 @@ class PlaylistSourcePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<Logicservice>(
       builder: (context, logic, _) {
-        final useSpotify = Logicservice().musicService == 'spotify';
+        final useSpotify = false;
         return Scaffold(
           extendBodyBehindAppBar: true,
           appBar: AppBar(
@@ -141,43 +142,18 @@ class PlaylistSourcePage extends StatelessWidget {
                     ),
                     child: Column(
                       children: [
-                        if (useSpotify) ...[
-                          _settingsRow(
-                            "🧑‍🎨",
-                            "Artist",
-                            "Alle songs!",
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      const ArtistSelectionPage(),
-                                ),
-                              );
-                            },
-                          ),
-                          const Divider(height: 1, thickness: 0.5),
-                        ],
+                        // Apple Music only: no Artist source
                         _settingsRow(
                           "🫵",
                           "Deine Playlists",
                           "",
                           onTap: () {
-                            if (useSpotify) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => PlaylistScreen(),
-                                ),
-                              );
-                            } else {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const Appletestpage(startWithLibrary: true),
-                                ),
-                              );
-                            }
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const AppleLibraryPlaylistsPage(),
+                              ),
+                            );
                           },
                         ),
                         const Divider(height: 1, thickness: 0.5),
@@ -186,21 +162,12 @@ class PlaylistSourcePage extends StatelessWidget {
                           "Öffentliche Playlists",
                           "",
                           onTap: () {
-                            if (useSpotify) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const SearchPlaylistPage(),
-                                ),
-                              );
-                            } else {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const Appletestpage(),
-                                ),
-                              );
-                            }
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const AppleCatalogPlaylistsPage(),
+                              ),
+                            );
                           },
                         ),
                       ],
