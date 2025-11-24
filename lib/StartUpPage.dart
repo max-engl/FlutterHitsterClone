@@ -11,11 +11,11 @@ class StartUpPage extends StatelessWidget {
     showCupertinoDialog(
       context: context,
       builder: (ctx) => CupertinoAlertDialog(
-        title: const Text('Spotify Premium'),
+        title: const Text('Apple Music'),
         content: const Padding(
           padding: EdgeInsets.only(top: 8.0),
           child: Text(
-            'Hast du Spotify Premium?\nDu benötigst es, um die App zu nutzen.',
+            'Hast du ein Apple Music Abo?\nDu benötigst es, um die App zu nutzen.',
             textAlign: TextAlign.center,
           ),
         ),
@@ -27,11 +27,11 @@ class StartUpPage extends StatelessWidget {
               showCupertinoDialog(
                 context: context,
                 builder: (ctx2) => const CupertinoAlertDialog(
-                  title: Text('Premium benötigt'),
+                  title: Text('Abo benötigt'),
                   content: Padding(
                     padding: EdgeInsets.only(top: 8.0),
                     child: Text(
-                      'Um fortzufahren wird Spotify Premium benötigt.',
+                      'Um fortzufahren wird ein Apple Music Abo benötigt.',
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -136,7 +136,7 @@ class StartUpPage extends StatelessWidget {
                       ),
                       SizedBox(height: 12),
                       Text(
-                        'Um fortzufahren benötigst du Spotify Premium.',
+                        'Um fortzufahren benötigst du ein Apple Music Abo.',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 17,
@@ -147,7 +147,7 @@ class StartUpPage extends StatelessWidget {
                       ),
                       SizedBox(height: 10),
                       Text(
-                        'Bitte bestätige, dass du Spotify Premium besitzt.',
+                        'Bitte bestätige, dass du ein Apple Music Abo besitzt.',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 15,
