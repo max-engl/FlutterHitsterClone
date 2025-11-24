@@ -1,10 +1,10 @@
 # HIPSTER 🎵
 
-A fast-paced music trivia game powered by Spotify Premium. Challenge friends to guess song titles and artists in quick rounds with seamless Spotify integration.
+A fast-paced music trivia game for Apple Music. Challenge friends to guess song titles and artists in quick rounds with native Apple Music playback.
 
 ![Flutter](https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white)
 ![Dart](https://img.shields.io/badge/Dart-0175C2?style=for-the-badge&logo=dart&logoColor=white)
-![Spotify](https://img.shields.io/badge/Spotify-1ED760?style=for-the-badge&logo=spotify&logoColor=white)
+![Apple Music](https://img.shields.io/badge/Apple%20Music-FA243C?style=for-the-badge&logo=applemusic&logoColor=white)
 
 ## 🛠️ Technology Stack
 
@@ -12,22 +12,19 @@ A fast-paced music trivia game powered by Spotify Premium. Challenge friends to 
 - **Flutter 3.8.1+** - Cross-platform UI framework
 - **Dart** - Programming language
 - **Provider** - State management solution
-
-### Spotify Integration
-- **Spotify Web API** - Music metadata, playlists, and search functionality
-- **Spotify SDK** (`spotify_sdk: ^3.0.2`) - Native playback control and device management
-- **Spotify Connect API** - Device selection and playback transfer
-- **OAuth 2.0** - Secure authentication flow
-
-### Key APIs & Services
-- **Spotify Web API Endpoints**:
-  - `/v1/me/playlists` - User playlists
-  - `/v1/search` - Artist and playlist search
-  - `/v1/artists/{id}/top-tracks` - Artist's popular tracks
-  - `/v1/me/player/devices` - Available playback devices
-  - `/v1/me/player` - Playback control and transfer
-- **Flutter Web Auth 2** (`flutter_web_auth_2: ^4.1.0`) - OAuth authentication
 - **Shared Preferences** - Local data persistence
+
+### Apple Music Integration
+- **MusicKit (native bridge)** - Authorization and playback via iOS native APIs
+- **Swift Player Manager** (`ios/Runner/MusicPlayerManager.swift`) - Plays songs using Apple Music with catalog→library fallback
+- **Flutter platform channel** (`lib/MusicKit.dart`) - Bridge between Flutter and native iOS playback
+
+### UI & Animation Libraries
+- **Cupertino Icons** - iOS-style icons
+- **Font Awesome Flutter** (`font_awesome_flutter: ^10.11.0`) - Icon library
+- **Wave** (`wave: ^0.2.2`) - Wave animations
+- **Confetti** (`confetti: ^0.8.0`) - Celebration effects
+- **GIF Support** (`gif: ^2.3.0`) - Animated GIF rendering
 
 ### UI & Animation Libraries
 - **Cupertino Icons** - iOS-style icons
@@ -43,21 +40,17 @@ A fast-paced music trivia game powered by Spotify Premium. Challenge friends to 
 - **Flutter Lints** - Code quality and style enforcement
 
 ### Platform Support
-- **iOS** - Native iOS app with Spotify SDK integration
-- **Android** - Native Android app with Spotify SDK integration
-- **Web** - Limited web support (development/testing only)
-- **macOS/Windows/Linux** - Desktop support available
+- **iOS** - Primary platform with Apple Music playback via native bridge
+- **Android/Web/Desktop** - UI builds may run for development, but Apple Music playback is iOS-only
 
 ### Security & Authentication
-- **PKCE (Proof Key for Code Exchange)** - Secure OAuth flow
-- **Crypto** (`crypto: ^3.0.6`) - Cryptographic operations for auth
-- **Secure token storage** - Encrypted credential management
+- **Apple Music authorization** - User grants Apple Music access via MusicKit
+- **Secure local storage** - Preferences and lightweight state
 
 ## 🎮 Features
 
-- **Spotify Integration**: Connect your Spotify Premium account for authentic music playback
-- **Device Selection**: Choose any Spotify-compatible device for audio output
-- **Flexible Music Sources**: Play from playlists or search for specific artists
+- **Apple Music Playback**: Native iOS playback with MusicKit
+- **Playlist Sources**: Choose from your Apple Music library playlists or public catalog playlists
 - **Multiplayer Support**: Add multiple players and track scores in real-time
 - **Customizable Rounds**: Set the number of rounds to fit your session
 - **Clean UI**: Modern, responsive interface with smooth animations
@@ -74,8 +67,8 @@ A fast-paced music trivia game powered by Spotify Premium. Challenge friends to 
 
 - **Flutter SDK** (3.8.1 or higher)
 - **Dart SDK** (included with Flutter)
-- **Spotify Premium Account** (required for playback)
-- **iOS Simulator/Device** or **Android Emulator/Device**
+- **An iOS device or simulator**
+- **Apple Music subscription** on the device
 
 ### Installation
 
@@ -90,10 +83,9 @@ A fast-paced music trivia game powered by Spotify Premium. Challenge friends to 
    flutter pub get
    ```
 
-3. **Configure Spotify API**
-   - Create a Spotify app at [Spotify Developer Dashboard](https://developer.spotify.com/dashboard)
-   - Add your app's redirect URI to the Spotify app settings
-   - Update the Spotify configuration in your app (check `WebApiService.dart`)
+3. **Authorize Apple Music**
+   - On first launch, the app will request Apple Music access
+   - Grant access to enable playback and library access
 
 4. **Run the app**
    ```bash
@@ -111,20 +103,15 @@ A fast-paced music trivia game powered by Spotify Premium. Challenge friends to 
 
 #### iOS
 - Ensure you have Xcode installed
-- Open `ios/Runner.xcworkspace` in Xcode if you need to configure signing
-
-#### Android
-- Ensure you have Android Studio installed
-- Configure your Android SDK and emulator
+- Open `ios/Runner.xcworkspace` in Xcode for signing if needed
 
 ## 🎯 How to Play
 
 1. **First Launch**: The app will show a welcome screen explaining Spotify Premium requirements
 2. **Setup**:
-   - Connect to Spotify and authorize the app
-   - Select a playback device (speakers, phone, etc.)
-   - Add players (minimum 2 required)
-   - Choose a playlist or search for an artist
+   - Authorize Apple Music when prompted
+   - Add players (minimum 2 recommended)
+   - Choose a playlist (library or public catalog)
    - Set the number of rounds
 3. **Game Flow**:
    - Songs play automatically from your selected source
@@ -143,14 +130,14 @@ lib/
 ├── SetupPage.dart           # Main game configuration
 ├── AddPlayersPage.dart      # Player management
 ├── PlaylistSourcePage.dart  # Music source selection
-├── SearchPlaylistPage.dart  # Playlist search
-├── ArtistSelectionPage.dart # Artist search
+├── AppleLibraryPlaylistsPage.dart # Library playlists
+├── AppleCatalogPlaylistsPage.dart # Public catalog playlists
 ├── PlaylistScreen.dart      # Playlist details
 ├── GamePage.dart           # Main game interface
 ├── services/
 │   ├── LogicService.dart   # Game state management
-│   ├── SpotifyService.dart # Spotify playback control
-│   └── WebApiService.dart  # Spotify Web API integration
+│   ├── AppleMusicService.dart # Apple Music playlist/track helpers
+│   └── WebApiService.dart  # Shared models (Playlist/Track)
 ├── theme/
 │   └── app_theme.dart      # App styling and constants
 ├── game/
@@ -160,35 +147,24 @@ lib/
 
 ## 🔧 Configuration
 
-### Spotify API Setup
+### Apple Music Setup
 
-1. Go to [Spotify Developer Dashboard](https://developer.spotify.com/dashboard)
-2. Create a new app
-3. Add these redirect URIs:
-   - `your-app-scheme://callback` (for mobile)
-   - `http://localhost:8888/callback` (for development)
-4. Note your Client ID and Client Secret
-5. Update the configuration in `lib/services/WebApiService.dart`
+Apple Music authorization occurs at runtime on iOS devices. Ensure the device has an active Apple Music subscription and is signed in. Playback uses native iOS MusicKit via a Flutter platform channel.
 
 ### Environment Variables
 
-Create a `.env` file in the root directory (optional):
-```env
-SPOTIFY_CLIENT_ID=your_client_id_here
-SPOTIFY_CLIENT_SECRET=your_client_secret_here
-```
+No external API credentials are required for Apple Music authorization. Configuration is handled by the OS.
 
 ## 🛠️ Development
 
 ### Key Dependencies
 
 - `flutter`: UI framework
-- `spotify_sdk`: Native Spotify SDK integration
 - `provider`: State management
 - `shared_preferences`: Local data persistence
-- `flutter_web_auth_2`: OAuth authentication
 - `font_awesome_flutter`: Icons
 - `confetti`: Celebration animations
+- `gif`: Animated GIF rendering
 
 ### Building for Release
 
@@ -215,15 +191,13 @@ This project follows standard Dart/Flutter conventions:
 
 ### Common Issues
 
-1. **Spotify Authentication Fails**
-   - Ensure your Spotify app has the correct redirect URIs
-   - Check that you're using a Spotify Premium account
-   - Verify your Client ID is correct
+1. **Apple Music Authorization Fails**
+   - Ensure the device is signed into Apple Music and has an active subscription
+   - Reopen the app and grant access when prompted
 
 2. **No Audio Playback**
-   - Ensure you have an active Spotify device
-   - Check that the selected device supports Spotify Connect
-   - Try refreshing the device list
+   - Apple Music may require network access or subscription validation
+   - Try playing a song in the Music app, then return to HIPSTER
 
 3. **App Crashes on Startup**
    - Run `flutter clean && flutter pub get`
@@ -258,9 +232,9 @@ If you encounter any issues or have questions:
 ## 🎵 Acknowledgments
 
 - Built with [Flutter](https://flutter.dev/)
-- Powered by [Spotify Web API](https://developer.spotify.com/documentation/web-api/)
+- Powered by Apple Music via iOS MusicKit
 - Inspired by music trivia games and party entertainment
 
 ---
 
-**Note**: This app requires a Spotify Premium subscription for full functionality. The app uses Spotify's Web API and SDK for music playback and cannot function without proper authentication and premium access.
+**Note**: This app requires an Apple Music subscription on iOS for playback. Authorization occurs via MusicKit.
