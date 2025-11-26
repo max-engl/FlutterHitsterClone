@@ -4,35 +4,24 @@
 <dict>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
-	
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
-	
 	<key>CFBundleDisplayName</key>
 	<string>Hipster</string>
-	
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
-	
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
-	
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
-	
 	<key>CFBundleName</key>
 	<string>Hipster</string>
-	
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
-	
 	<key>CFBundleShortVersionString</key>
 	<string>$(FLUTTER_BUILD_NAME)</string>
-	
 	<key>CFBundleSignature</key>
 	<string>????</string>
-
-	<!-- URL Scheme used by your app -->
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -42,39 +31,28 @@
 			</array>
 		</dict>
 	</array>
-
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
-
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-
-	<!-- REQUIRED for MusicKit (catalog, library, playlists) -->
 	<key>NSAppleMusicUsageDescription</key>
 	<string>This app needs access to your Apple Music library to play and control songs.</string>
-
-	<!-- REQUIRED: allow background playback -->
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>
 	</array>
-
-	<key>UIApplicationSupportsIndirectInputEvents</key>
-	<true/>
-
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
-
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
-
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

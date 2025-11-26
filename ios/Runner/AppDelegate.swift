@@ -9,8 +9,8 @@ import MusicKit
 
     override func application(
         _ application: UIApplication,
-        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]?
-    ) -> Bool { 
+        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any ]?
+    ) -> Bool {
 
         let controller = window?.rootViewController as! FlutterViewController
         flutterChannel = FlutterMethodChannel(
