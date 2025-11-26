@@ -1,10 +1,10 @@
 # HIPSTER 🎵
 
-A fast-paced music trivia game with native Apple Music playback and Spotify Web API for search/metadata. Challenge friends to guess song titles and artists in quick rounds.
+A fast-paced music trivia game powered by Spotify. Challenge friends to guess song titles and artists with seamless Spotify Connect control.
 
 ![Flutter](https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white)
 ![Dart](https://img.shields.io/badge/Dart-0175C2?style=for-the-badge&logo=dart&logoColor=white)
-![Apple Music](https://img.shields.io/badge/Apple%20Music-FA243C?style=for-the-badge&logo=applemusic&logoColor=white)
+![Spotify](https://img.shields.io/badge/Spotify-1ED760?style=for-the-badge&logo=spotify&logoColor=white)
 
 ## 🛠️ Technology Stack
 
@@ -13,10 +13,10 @@ A fast-paced music trivia game with native Apple Music playback and Spotify Web 
 - **Dart** - Programming language
 - **Provider** - State management solution
 
-### Apple Music & Spotify Integration
-- **Apple Music Playback (iOS)** - Native playback via MusicKit
-- **Spotify Web API** - Playlist/artist search and metadata only (no Spotify playback)
-- **OAuth (PKCE)** - Secure Spotify auth via `flutter_web_auth_2`
+### Spotify Integration
+- **Spotify Web API** - Playlist/artist search, device management, and playback control via Spotify Connect
+- **OAuth (PKCE)** - Secure authentication via `flutter_web_auth_2`
+- **Env Loading** - `flutter_dotenv` for local credentials
 
 ### Key APIs & Services
 - **Spotify Web API Endpoints**:
@@ -42,17 +42,16 @@ A fast-paced music trivia game with native Apple Music playback and Spotify Web 
 - **Flutter Lints** - Code quality and style enforcement
 
 ### Platform Support
-- **iOS** - Primary platform with Apple Music playback
-- **Android/Web/Desktop** - UI builds for development; playback is iOS-only
+- **iOS** and **Android** - Full app support; playback occurs on your active Spotify device via Connect
+- **Web/Desktop** - Development only
 
 ### Security & Authentication
-- **Apple Music authorization** - iOS MusicKit prompts user for access
 - **Spotify OAuth (PKCE)** - Uses `.env` to store client id and config
 
 ## 🎮 Features
 
-- **Apple Music Playback**: Native iOS playback
-- **Flexible Sources**: Library playlists, public playlists, or artists
+- **Spotify Connect Control**: Start/pause, skip, and transfer playback to selected device
+- **Flexible Sources**: Your playlists, public playlists, or artists
 - **Artist Multi-Select**: Select multiple artists and fetch all songs with a progress dialog
 - **Multiplayer Support**: Add multiple players and track scores in real-time
 - **Customizable Rounds**: Set the number of rounds
@@ -70,9 +69,9 @@ A fast-paced music trivia game with native Apple Music playback and Spotify Web 
 
 - **Flutter SDK** (3.8.1 or higher)
 - **Dart SDK** (included with Flutter)
-- **An iOS device or simulator** (for Apple Music playback)
-- **Apple Music subscription** on the device
-- **Spotify Developer account** (for metadata/search)
+- **Spotify Premium account**
+- **Spotify app logged in on any device** (phone, desktop, smart speaker) to act as the playback target
+- **Spotify Developer account** (for API access)
 
 ### Installation
 
@@ -107,9 +106,9 @@ A fast-paced music trivia game with native Apple Music playback and Spotify Web 
 
 6. **Run the app**
    ```bash
-   # iOS (playback supported)
+   # iOS
    flutter run -d ios
-   # Android/Web/Desktop (UI only)
+   # Android
    flutter run -d android
    ```
 
@@ -130,8 +129,7 @@ A fast-paced music trivia game with native Apple Music playback and Spotify Web 
 #### iOS
 - Ensure you have Xcode installed
 - Open `ios/Runner.xcworkspace` in Xcode for signing if needed
-- URL scheme `hipsterclone` is already configured in `ios/Runner/Info.plist`
-- Ensure device has an active Apple Music subscription and is signed in
+- Ensure `CFBundleURLSchemes` includes `hipsterclone` in `ios/Runner/Info.plist`
 
 #### Android
 - Ensure you have Android Studio installed
@@ -139,13 +137,14 @@ A fast-paced music trivia game with native Apple Music playback and Spotify Web 
 
 ## 🎯 How to Play
 
-1. **First Launch**: Confirm Apple Music subscription when prompted
+1. **First Launch**: Confirm Spotify Premium
 2. **Setup**
-   - Authorize Apple Music when prompted
+   - Connect to Spotify and authorize the app
+   - Choose a playback device from available Spotify devices (the one currently active or transfer to your preferred device)
    - Add players
    - Choose a source:
      - `Artist`: enable “Mehrere Artists?” for multi-select; tap “Fertig” to fetch all songs (with progress)
-     - `Deine Playlists`: pick a library playlist
+     - `Deine Playlists`: pick one of your playlists
      - `Öffentliche Playlists`: search public playlists
    - Tap the selected summary card to preview all selected songs
    - Set the number of rounds
@@ -168,13 +167,13 @@ lib/
 ├── PlaylistSourcePage.dart  # Music source selection
 ├── SearchPlaylistPage.dart        # Public playlist search
 ├── ArtistSelectionPage.dart       # Artist search + multi-select
-├── PlaylistScreen.dart            # Library playlists
+├── PlaylistScreen.dart            # Your playlists
 ├── SelectedSongsPage.dart         # Selected songs preview list
 ├── GamePage.dart           # Main game interface
 ├── services/
 │   ├── LogicService.dart   # Game state management
-│   ├── SpotifyService.dart       # (legacy) Spotify playback control
-│   └── WebApiService.dart        # Spotify Web API integration (search/metadata)
+│   ├── SpotifyService.dart       # Playback control helpers
+│   └── WebApiService.dart        # Spotify Web API integration (auth, devices, playlists, tracks)
 ├── theme/
 │   └── app_theme.dart      # App styling and constants
 ├── game/
@@ -244,9 +243,10 @@ This project follows standard Dart/Flutter conventions:
    - Confirm redirect URI in Spotify dashboard is `hipsterclone://callback`
    - Ensure iOS `Info.plist` includes URL scheme `hipsterclone`
 
-2. **No Audio Playback (Apple Music)**
-   - Ensure Apple Music subscription is active and user signed in
-   - Try playing a song in the Music app, then return to HIPSTER
+2. **No Audio Playback**
+   - Ensure a Spotify device is active/logged in (phone, desktop, or speaker)
+   - Use the device picker in Setup to select or transfer playback
+   - If playback fails, open your Spotify app to initialize a device
 
 3. **App Crashes on Startup**
    - Run `flutter clean && flutter pub get`
@@ -281,9 +281,9 @@ If you encounter any issues or have questions:
 ## 🎵 Acknowledgments
 
 - Built with [Flutter](https://flutter.dev/)
-- Powered by Apple Music (playback) and [Spotify Web API](https://developer.spotify.com/documentation/web-api/) for search/metadata
+- Powered by [Spotify Web API](https://developer.spotify.com/documentation/web-api/)
 - Inspired by music trivia games and party entertainment
 
 ---
 
-**Note**: Playback requires an Apple Music subscription on iOS. Spotify Web API is used only for search/metadata; no Spotify playback.
+**Note**: Requires Spotify Premium. Playback is controlled via Spotify Connect on your active device.

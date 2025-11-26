@@ -8,9 +8,14 @@ import 'package:provider/provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load(fileName: ".env", mergeWith: const {
-    'SPOTIFY_SCOPES': 'user-read-playback-state user-modify-playback-state user-read-currently-playing playlist-read-private playlist-read-collaborative user-top-read',
-    'SPOTIFY_REDIRECT_URI': 'hipsterclone://callback',
+  try {
+    await dotenv.load(fileName: ".env");
+  } catch (_) {
+    print(".env missing");
+  }
+  // Print all loaded environment variables
+  dotenv.env.forEach((key, value) {
+    print('$key: $value');
   });
   runApp(const MyApp());
 }
