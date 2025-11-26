@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:hitsterclone/services/LogicService.dart';
 import 'package:crypto/crypto.dart';
@@ -32,10 +33,16 @@ class WebApiService {
   // AUTHENTICATION (PKCE)
   // =====================================================
   Future<String?> fetchSpotifyAccessToken() async {
-    const clientId = '28cb945996d04097b8b516575cc6322a';
-    const redirectUri = 'hipsterclone://callback';
-    const scopes =
+    final clientId = dotenv.env['SPOTIFY_CLIENT_ID'] ?? '';
+    final redirectUri =
+        dotenv.env['SPOTIFY_REDIRECT_URI'] ?? 'hipsterclone://callback';
+    final scopes =
+        dotenv.env['SPOTIFY_SCOPES'] ??
         'user-read-playback-state user-modify-playback-state user-read-currently-playing playlist-read-private playlist-read-collaborative user-top-read';
+    if (clientId.isEmpty) {
+      print('Missing SPOTIFY_CLIENT_ID in .env');
+      return null;
+    }
 
     final verifier = _generateCodeVerifier();
     final challenge = base64UrlEncode(
@@ -525,11 +532,13 @@ class WebApiService {
         final tracksData = _safeJson(tracksRes.body);
         final albumTracks = tracksData['items'] as List? ?? [];
 
-        final albumImages = ((a as Map<String, dynamic>)['images'] as List? ?? [])
-            .whereType<Map<String, dynamic>>()
-            .toList();
-        final albumImageUrl =
-            albumImages.isNotEmpty ? (albumImages.first['url'] as String?) : null;
+        final albumImages =
+            ((a as Map<String, dynamic>)['images'] as List? ?? [])
+                .whereType<Map<String, dynamic>>()
+                .toList();
+        final albumImageUrl = albumImages.isNotEmpty
+            ? (albumImages.first['url'] as String?)
+            : null;
         final albumName = (a as Map<String, dynamic>)['name'] as String?;
 
         for (final t in albumTracks) {

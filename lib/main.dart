@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hitsterclone/SetupPage.dart';
 import 'package:hitsterclone/StartUpPage.dart';
 import 'package:hitsterclone/services/LogicService.dart';
 import 'package:hitsterclone/theme/app_theme.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: ".env", mergeWith: const {
+    'SPOTIFY_SCOPES': 'user-read-playback-state user-modify-playback-state user-read-currently-playing playlist-read-private playlist-read-collaborative user-top-read',
+    'SPOTIFY_REDIRECT_URI': 'hipsterclone://callback',
+  });
   runApp(const MyApp());
 }
 
