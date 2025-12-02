@@ -32,12 +32,13 @@ extension _GamePageLogic on _GamePageState {
   }
 
   Future<void> startGame() async {
-    // Select a new random GIF
+    // Select a new random GIF from the list
     setState(() {
       _currentGif = _getRandomGif();
       countdown = 3;
       currentState = 3; // New state for countdown
       lastGuessCorrect = null; // Reset last guess result
+      skippedRound = false;
     });
     _triggerAnimation();
     SpotifyService().pauseSong();
@@ -93,6 +94,15 @@ extension _GamePageLogic on _GamePageState {
         }
       });
     });
+  }
+
+  void handleSkip() {
+    setState(() {
+      skippedRound = true;
+      guessingPlayer = null;
+      currentState = 4;
+    });
+    _triggerAnimation();
   }
 
   // New method to handle user's selection of correct/incorrect

@@ -29,6 +29,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
   String? guessingPlayer;
   int? countdown;
   Timer? _timer;
+  bool skippedRound = false;
 
   List<String> players = [];
   Track? currentSong;
@@ -721,6 +722,31 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
                         )
                         .toList(),
                   ),
+                  SizedBox(height: kDefaultSpacing),
+                  Container(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () => handleSkip(),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        foregroundColor: Colors.black,
+                        elevation: 1,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        minimumSize: const Size(double.infinity, 56),
+                      ),
+                      child: const Text(
+                        "Keine Ahnung",
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -768,7 +794,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
           margin: EdgeInsets.symmetric(horizontal: 10),
           child: Column(
             children: [
-              if (guessingPlayer != null)
+              if (!skippedRound && guessingPlayer != null)
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -782,11 +808,12 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
                     ),
                   ],
                 ),
-              Text(
-                " hat geraten:",
-                style: subheadingStyle.copyWith(fontSize: 20),
-                textAlign: TextAlign.center,
-              ),
+              if (!skippedRound && guessingPlayer != null)
+                Text(
+                  " hat geraten:",
+                  style: subheadingStyle.copyWith(fontSize: 20),
+                  textAlign: TextAlign.center,
+                ),
               SizedBox(height: 5),
 
               SizedBox(height: 30),
@@ -864,49 +891,73 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
               if (lastGuessCorrect == null)
                 Column(
                   children: [
-                    ElevatedButton(
-                      onPressed: () => handleGuessResult(true),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        foregroundColor: Colors.black,
-                        elevation: 1,
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
+                    if (!skippedRound) ...[
+                      ElevatedButton(
+                        onPressed: () => handleGuessResult(true),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          foregroundColor: Colors.black,
+                          elevation: 1,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          minimumSize: const Size(double.infinity, 56),
                         ),
-                        minimumSize: const Size(double.infinity, 56),
-                      ),
-                      child: const Text(
-                        "RICHTIG GERATEN",
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: kDefaultSpacing),
-                    ElevatedButton(
-                      onPressed: () => handleGuessResult(false),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        foregroundColor: Colors.black,
-                        elevation: 1,
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        minimumSize: const Size(double.infinity, 56),
-                      ),
-                      child: const Text(
-                        "LEIDER FALSCH",
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black,
+                        child: const Text(
+                          "RICHTIG GERATEN",
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black,
+                          ),
                         ),
                       ),
-                    ),
+                      SizedBox(height: kDefaultSpacing),
+                      ElevatedButton(
+                        onPressed: () => handleGuessResult(false),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          foregroundColor: Colors.black,
+                          elevation: 1,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          minimumSize: const Size(double.infinity, 56),
+                        ),
+                        child: const Text(
+                          "LEIDER FALSCH",
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                    ] else ...[
+                      ElevatedButton(
+                        onPressed: () => handleGuessResult(false),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          foregroundColor: Colors.black,
+                          elevation: 1,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          minimumSize: const Size(double.infinity, 56),
+                        ),
+                        child: const Text(
+                          "WEITER",
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                    ],
                     SizedBox(height: kDefaultSpacing),
                     buildScoreBoard(),
                   ],
