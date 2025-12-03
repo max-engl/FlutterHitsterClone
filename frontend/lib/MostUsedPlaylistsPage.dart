@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:hitsterclone/SetupPage.dart';
 import 'package:hitsterclone/services/LogicService.dart';
@@ -31,7 +32,9 @@ class _MostUsedPlaylistsPageState extends State<MostUsedPlaylistsPage> {
       errorMessage = null;
     });
     try {
-      final uri = Uri.parse('http://10.170.54.7:3000/playlist');
+      final baseUrl = dotenv.env['BACKEND_URL'];
+      print(baseUrl);
+      final uri = Uri.parse('$baseUrl/playlist');
       final res = await http.get(uri);
       if (res.statusCode < 200 || res.statusCode >= 300) {
         setState(() {

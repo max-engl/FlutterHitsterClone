@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hitsterclone/services/WebApiService.dart';
 import 'package:http/http.dart' as http;
@@ -92,8 +93,8 @@ class Logicservice extends ChangeNotifier {
   Future<void> uploadPlayList() async {
     if (_playListType == false) return;
     if (_playlist == null) return;
-
-    final uri = Uri.parse('http://10.170.54.7:3000/playlist');
+    final baseUrl = dotenv.env['BACKEND_URL'];
+    final uri = Uri.parse('$baseUrl/playlist');
     final body = {
       'playListID': _playlist!.id,
       'name': _playlist!.name,
