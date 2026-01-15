@@ -62,12 +62,12 @@ A fast-paced music trivia game powered by Spotify. Challenge friends to guess so
 ## 📱 Screenshots
 
 <p>
-  <img src="assets/screenshots/0A6C96CB-9295-4C23-9BE4-3C99134A56EE_4_5005_c.jpeg" width="320" alt="Screenshot 1" />
-  <img src="assets/screenshots/3589E3DD-08FF-4099-8751-F6C1392E081F_4_5005_c.jpeg" width="320" alt="Screenshot 2" />
+  <img src="frontend/assets/screenshots/0A6C96CB-9295-4C23-9BE4-3C99134A56EE_4_5005_c.jpeg" width="320" alt="Screenshot 1" />
+  <img src="frontend/assets/screenshots/3589E3DD-08FF-4099-8751-F6C1392E081F_4_5005_c.jpeg" width="320" alt="Screenshot 2" />
 </p>
 <p>
-  <img src="assets/screenshots/B20DFC2E-43A9-4864-84B6-F5E17467B1DB_4_5005_c.jpeg" width="320" alt="Screenshot 3" />
-  <img src="assets/screenshots/FE2952BC-A82B-496E-A80C-F57A470DFAD7_4_5005_c.jpeg" width="320" alt="Screenshot 4" />
+  <img src="frontend/assets/screenshots/B20DFC2E-43A9-4864-84B6-F5E17467B1DB_4_5005_c.jpeg" width="320" alt="Screenshot 3" />
+  <img src="frontend/assets/screenshots/FE2952BC-A82B-496E-A80C-F57A470DFAD7_4_5005_c.jpeg" width="320" alt="Screenshot 4" />
 </p>
 
 ## 🚀 Getting Started

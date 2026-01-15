@@ -540,6 +540,8 @@ class WebApiService {
             ? (albumImages.first['url'] as String?)
             : null;
         final albumName = (a as Map<String, dynamic>)['name'] as String?;
+        final releaseDate =
+            (a as Map<String, dynamic>)['release_date'] as String?;
 
         for (final t in albumTracks) {
           final track = (t as Map<String, dynamic>);
@@ -561,6 +563,7 @@ class WebApiService {
                 albumImageUrl: albumImageUrl,
                 uri: uri,
                 durationMs: (track['duration_ms'] as int? ?? 0),
+                release_date: releaseDate,
               ),
             );
           }
@@ -744,7 +747,7 @@ class Track {
   final String? albumImageUrl;
   final String uri;
   final int durationMs;
-
+  final String? release_date;
   Track({
     required this.id,
     required this.name,
@@ -753,6 +756,7 @@ class Track {
     this.albumImageUrl,
     required this.uri,
     required this.durationMs,
+    required this.release_date,
   });
 
   factory Track.fromJson(Map<String, dynamic> json) {
@@ -777,6 +781,7 @@ class Track {
           : null,
       uri: json['uri'] as String? ?? '',
       durationMs: json['duration_ms'] as int? ?? 0,
+      release_date: album?['release_date'] as String?,
     );
   }
 }

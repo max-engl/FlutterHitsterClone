@@ -855,7 +855,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
 
                         const SizedBox(height: 4),
                         Text(
-                          currentSong?.artists.first ?? "FEHLER",
+                          currentSong?.artists.join(", ") ?? "FEHLER",
                           style: const TextStyle(
                             fontSize: 16,
                             color: Colors.white70,
@@ -867,6 +867,19 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
                       ],
                     ),
                   ),
+                ],
+              ),
+              Row(
+                children: [
+                  Expanded(child: Divider(color: Colors.white70)),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: Text(
+                      currentSong?.release_date?.split('-').first ?? "NO DATE",
+                      style: const TextStyle(color: Colors.white70),
+                    ),
+                  ),
+                  Expanded(child: Divider(color: Colors.white70)),
                 ],
               ),
               SizedBox(height: kDefaultSpacing),

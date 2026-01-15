@@ -46,6 +46,8 @@ class SpotifyService {
       final played = await playSong(nextTrack.uri);
       if (played) {
         Logicservice().removeTrackYetToplay(nextTrack);
+
+        print(nextTrack.release_date);
         print(nextTrack.name);
         return nextTrack;
       } else {
