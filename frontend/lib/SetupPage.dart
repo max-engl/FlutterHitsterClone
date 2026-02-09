@@ -2,10 +2,12 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hitsterclone/AddPlayersPage.dart';
 import 'package:hitsterclone/GamePage.dart';
 import 'package:hitsterclone/PlaylistSourcePage.dart';
+import 'package:hitsterclone/TimeLineGame.dart';
 import 'package:provider/provider.dart';
 import 'package:hitsterclone/services/LogicService.dart';
 import 'package:hitsterclone/services/WebApiService.dart';
@@ -495,71 +497,105 @@ class SetupPage extends StatelessWidget {
                     ),
                   ),
                   const Spacer(),
-                  ElevatedButton(
-                    onPressed: () async {
-                      final playerCount = logic.players.length;
-                      if (playerCount < 2) {
-                        _showMinimumPlayersDialog(context);
-                        return;
-                      }
-
-                      if (logic.playlist == null) {
-                        _showPlaylistRequiredDialog(context);
-                        return;
-                      }
-
-                      final int maxRounds = logic.tracks.length;
-                      final int rounds = logic.rounds;
-                      if (maxRounds < 1) {
-                        _showPlaylistRequiredDialog(context);
-                        return;
-                      }
-                      if (rounds < 1 || rounds > maxRounds) {
-                        _showRoundsRequiredDialog(context, logic);
-                        return;
-                      }
-
-                      // Require Spotify auth and a selected device
-                      if (logic.token.isEmpty) {
-                        _showSpotifyRequiredDialog(context);
-                        return;
-                      }
-                      if (logic.preferredDeviceId == null) {
-                        _showDeviceSelectionRequiredDialog(context);
-                        return;
-                      }
-
-                      final hasActive = await WebApiService()
-                          .ensureActiveDevice(force: true);
-                      if (!hasActive) {
-                        _showActiveDeviceRequiredDialog(context);
-                        return;
-                      }
-
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => GamePage(rounds: rounds),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () async {
+                          final playerCount = logic.players.length;
+                          if (playerCount < 2) {
+                            _showMinimumPlayersDialog(context);
+                            return;
+                          }
+                      
+                          if (logic.playlist == null) {
+                            _showPlaylistRequiredDialog(context);
+                            return;
+                          }
+                      
+                          final int maxRounds = logic.tracks.length;
+                          final int rounds = logic.rounds;
+                          if (maxRounds < 1) {
+                            _showPlaylistRequiredDialog(context);
+                            return;
+                          }
+                          if (rounds < 1 || rounds > maxRounds) {
+                            _showRoundsRequiredDialog(context, logic);
+                            return;
+                          }
+                      
+                          // Require Spotify auth and a selected device
+                          if (logic.token.isEmpty) {
+                            _showSpotifyRequiredDialog(context);
+                            return;
+                          }
+                          if (logic.preferredDeviceId == null) {
+                            _showDeviceSelectionRequiredDialog(context);
+                            return;
+                          }
+                      
+                          final hasActive = await WebApiService()
+                              .ensureActiveDevice(force: true);
+                          if (!hasActive) {
+                            _showActiveDeviceRequiredDialog(context);
+                            return;
+                          }
+                      
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => GamePage(rounds: rounds),
+                            ),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          foregroundColor: Colors.black,
+                          elevation: 1,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 30,
+                            vertical: 14,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          textStyle: const TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: Colors.black,
-                      elevation: 1,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 30,
-                        vertical: 14,
+                        child: const Text("Spiel starten"),
+                      ).animate().scale(duration: 200.ms),
+                       ElevatedButton(
+                        onPressed: () async {
+       
+                      
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => TimeLineGame(),
+                            ),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          foregroundColor: Colors.black,
+                          elevation: 1,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 30,
+                            vertical: 14,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          textStyle: const TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        child: const Text("Timeline"),
                       ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      textStyle: const TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    child: const Text("Spiel starten"),
+                    ],
                   ),
                 ],
               ),

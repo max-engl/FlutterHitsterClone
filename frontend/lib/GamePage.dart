@@ -1,9 +1,8 @@
 library game_page;
 
-import 'dart:convert';
 import 'dart:async';
 import 'dart:math';
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:gif/gif.dart';
 import 'package:hitsterclone/SetupPage.dart';
@@ -11,21 +10,27 @@ import 'package:hitsterclone/services/LogicService.dart';
 import 'package:hitsterclone/services/SpotifyService.dart';
 import 'package:hitsterclone/services/WebApiService.dart';
 import 'package:provider/provider.dart';
+
+import 'game/widgets/game_widgets.dart';
+
 part 'game/game_page_logic.dart';
 
 class GamePage extends StatefulWidget {
   const GamePage({super.key, required this.rounds});
 
   final int rounds;
+
   @override
   State<GamePage> createState() => _GamePageState();
 }
 
 class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
   late final GifController _controller;
+
   bool _connected = false;
   int currentSongIndex = 0;
   int currentState = 0;
+
   String? guessingPlayer;
   int? countdown;
   Timer? _timer;
@@ -33,8 +38,10 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
 
   List<String> players = [];
   Track? currentSong;
+
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
+
   String _currentGif = "assets/gifs/xz.gif"; // Default GIF
 
   // Gradient palette and current gradient
@@ -352,22 +359,25 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
   // Add player score tracking
   Map<String, int> playerScores = {};
   bool? lastGuessCorrect;
-  static const int winningScore = 10;
+  static const int winningScore = 10; // (still here if your logic uses it somewhere)
   int roundsPlayed = 0;
-
-  // loadJsonFromAssets moved to extension
 
   @override
   void initState() {
     super.initState();
+
+    // Players from Logicservice (as in your original)
     setState(() {
       players = Logicservice().players;
     });
+
     Logicservice().uploadPlayList();
+
     _controller = GifController(vsync: this);
+
     _animationController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 500),
     );
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
@@ -381,7 +391,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
     _currentGradient = _pickNextGradient();
 
     // Initialize player scores
-    for (var player in players) {
+    for (final player in players) {
       playerScores[player] = 0;
     }
 
@@ -399,743 +409,90 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
     super.dispose();
   }
 
-  // _triggerAnimation moved to extension
-
-  // Check if any player has reached the winning score
-  // Game over check moved to extension (rounds-based)
-
-  // Get the winner(s) of the game
-  // _getWinners moved to extension
-
-  // startGame moved to extension
-
-  // handleGuess moved to extension
-
-  // New method to handle user's selection of correct/incorrect (moved to extension)
+  // NOTE: All your game logic methods are still in:
+  // part 'game/game_page_logic.dart';
+  // e.g. startGame(), handleGuess(), handleGuessResult(), handleSkip(), _getWinners(), _getRandomGif(), etc.
 
   @override
   Widget build(BuildContext context) {
-    // Define consistent text styles
-    final TextStyle headingStyle = TextStyle(
-      fontSize: 28,
-      fontWeight: FontWeight.w800,
-      letterSpacing: 3.0,
-      color: Colors.white,
-    );
-
-    final TextStyle subheadingStyle = TextStyle(
-      fontSize: 20,
-      fontWeight: FontWeight.w600,
-      letterSpacing: 2.0,
-      color: Colors.white,
-    );
-
-    final TextStyle buttonTextStyle = TextStyle(
-      fontSize: 18,
-      fontWeight: FontWeight.w600,
-      letterSpacing: 2.0,
-      color: Colors.white,
-    );
-
-    final TextStyle countdownStyle = TextStyle(
-      fontSize: 120,
-      fontWeight: FontWeight.w900,
-      color: Colors.white,
-    );
-
-    final TextStyle scoreStyle = TextStyle(
-      fontSize: 16,
-      fontWeight: FontWeight.w600,
-      letterSpacing: 1.0,
-      color: Colors.white,
-    );
-
-    // Define consistent spacing
-    const double kDefaultPadding = 24.0;
-    const double kLargePadding = 40.0;
-    const double kSmallPadding = 16.0;
-    const double kDefaultSpacing = 15.0;
-    const double kLargeSpacing = 50.0;
-    const double kSmallSpacing = 20.0;
-
-    // Create a reusable widget for displaying scores
-    // Build a scoreboard widget to display player scores
-    Widget buildScoreBoard({bool isGameOver = false}) {
-      final highestScore = playerScores.values.reduce(max);
-
-      return Container(
-        margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Padding(
-          padding: EdgeInsets.all(kDefaultPadding),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Punktestand:",
-                style: scoreStyle.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              ),
-              SizedBox(height: kSmallSpacing),
-              ...players.map((player) {
-                final isWinner =
-                    isGameOver && playerScores[player] == highestScore;
-                return Padding(
-                  padding: EdgeInsets.only(bottom: 4),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        player.toUpperCase(),
-                        style: scoreStyle.copyWith(
-                          fontWeight: isWinner
-                              ? FontWeight.bold
-                              : FontWeight.normal,
-                          color: Colors.black,
-                        ),
-                      ),
-                      Text(
-                        "${playerScores[player]}",
-                        style: scoreStyle.copyWith(
-                          fontWeight: isWinner
-                              ? FontWeight.bold
-                              : FontWeight.normal,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              }).toList(),
-            ],
-          ),
-        ),
-      );
-    }
-
     Widget stateWidget;
 
     switch (currentState) {
       case 0: // Initial state
-        stateWidget = Column(
-          children: [
-            Consumer<Logicservice>(
-              builder: (context, logic, child) {
-                return Column(
-                  children: [
-                    if (logic.playlist?.imageUrl != null)
-                      Image.network(
-                        logic.playlist!.imageUrl!,
-                        width: 100,
-                        height: 100,
-                        fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) => const SizedBox.shrink(),
-                      ),
-                    const SizedBox(height: 8),
-                    Text(
-                      logic.playlist?.name?.substring(
-                            0,
-                            min(20, logic.playlist!.name!.length),
-                          ) ??
-                          'None selected',
-                      style: subheadingStyle.copyWith(fontSize: 16),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                );
-              },
-            ),
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(
-                horizontal: kLargePadding,
-                vertical: kDefaultPadding,
-              ),
-              child: ElevatedButton(
-                onPressed: () async => await startGame(),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: Colors.black,
-                  elevation: 1,
-                  padding: EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  minimumSize: Size(double.infinity, 56),
-                ),
-                child: Text(
-                  "START GAME",
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black,
-                  ),
-                ),
-              ),
-            ),
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(
-                horizontal: kLargePadding,
-                vertical: 0,
-              ),
-              child: ElevatedButton(
-                onPressed: () => Navigator.of(context).pop(),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: Colors.black,
-                  elevation: 1,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  minimumSize: const Size(double.infinity, 56),
-                ),
-                child: const Text(
-                  "BACK",
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        );
-        break;
-      case 3: // Countdown state
-        stateWidget = Container(
-          padding: EdgeInsets.all(kLargePadding),
-          margin: EdgeInsets.symmetric(horizontal: kDefaultPadding),
-          decoration: BoxDecoration(
-            color: Colors.transparent,
-            border: Border.all(color: Colors.transparent, width: 0),
-          ),
-          child: TweenAnimationBuilder<double>(
-            tween: Tween<double>(begin: 0.5, end: 1.0),
-            duration: Duration(milliseconds: 800),
-            builder: (context, value, child) {
-              return Transform.scale(
-                scale: value,
-                child: Text("$countdown", style: countdownStyle),
-              );
-            },
-          ),
-        );
-        break;
-      case 1: // Guessing state
-        stateWidget = Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: kDefaultPadding),
-              child: Column(
-                children: [
-                  Text(
-                    "Denkt nach!",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w900,
-                      fontSize: 30,
-                    ),
-                  ),
-
-                  Text(
-                    (roundsPlayed + 1).toString() +
-                        "/" +
-                        widget.rounds.toString(),
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 20,
-                    ),
-                  ),
-                  SizedBox(height: kDefaultSpacing),
-                  Container(
-                    width: 200,
-                    height: 200,
-                    child: Gif(
-                      image: AssetImage(_currentGif),
-                      controller:
-                          _controller, // if duration and fps is null, original gif fps will be used.
-                      //fps: 30,
-                      //duration: const Duration(seconds: 3),
-                      autostart: Autostart.no,
-                      placeholder: (context) => const Text('Loading...'),
-                      onFetchCompleted: () {
-                        _controller.reset();
-                        _controller
-                            .repeat(); // Changed from forward() to repeat() to make the gif loop
-                      },
-                    ),
-                  ),
-                  SizedBox(height: 30),
-                  Text(
-                    "Wer weiß es? ",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 20,
-                    ),
-                  ),
-                  SizedBox(height: 5),
-                  GridView.count(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    crossAxisCount: 2,
-                    mainAxisSpacing: kSmallSpacing,
-                    crossAxisSpacing: kSmallSpacing,
-                    childAspectRatio: 1.7, // wider buttons, less height
-                    children: players
-                        .map(
-                          (player) => ElevatedButton(
-                            onPressed: () => handleGuess(player),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              foregroundColor: Colors.black,
-                              elevation: 1,
-                              padding: const EdgeInsets.symmetric(vertical: 6),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(24),
-                              ),
-                            ),
-                            child: Text(
-                              player.toUpperCase(),
-                              style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
-                        )
-                        .toList(),
-                  ),
-                  SizedBox(height: kDefaultSpacing),
-                  Container(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () => handleSkip(),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        foregroundColor: Colors.black,
-                        elevation: 1,
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        minimumSize: const Size(double.infinity, 56),
-                      ),
-                      child: const Text(
-                        "Keine Ahnung",
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        );
-        break;
-      case 2: // Waiting for guess result
-        stateWidget = Container(
-          padding: EdgeInsets.all(kLargePadding),
-          margin: EdgeInsets.symmetric(horizontal: kDefaultPadding),
-          decoration: BoxDecoration(
-            color: Colors.transparent,
-            border: Border.all(color: Colors.transparent, width: 0),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              if (guessingPlayer != null)
-                Text(
-                  "${guessingPlayer!.toUpperCase()} will raten!",
-                  style: subheadingStyle.copyWith(fontSize: 30),
-                  textAlign: TextAlign.center,
-                ),
-              SizedBox(height: kSmallSpacing),
-              TweenAnimationBuilder<double>(
-                tween: Tween<double>(begin: 0.5, end: 1.0),
-                duration: Duration(milliseconds: 800),
-                builder: (context, value, child) {
-                  return Transform.scale(
-                    scale: value,
-                    child: Text(
-                      "$countdown",
-                      style: countdownStyle.copyWith(fontSize: 100),
-                      textAlign: TextAlign.center,
-                    ),
+        stateWidget = Consumer<Logicservice>(
+          builder: (context, logic, child) {
+            final playlistName = (logic.playlist?.name == null)
+                ? "None selected"
+                : logic.playlist!.name!.substring(
+                    0,
+                    min(20, logic.playlist!.name!.length),
                   );
-                },
-              ),
-            ],
-          ),
+
+            return StartStateView(
+              playlistImageUrl: logic.playlist?.imageUrl,
+              playlistName: playlistName,
+              onStart: () async => await startGame(),
+              onBack: () => Navigator.of(context).pop(),
+            );
+          },
         );
         break;
-      case 4: // Show song title and guess result
-        stateWidget = Container(
-          margin: EdgeInsets.symmetric(horizontal: 10),
-          child: Column(
-            children: [
-              if (!skippedRound && guessingPlayer != null)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "${guessingPlayer!}",
-                      style: subheadingStyle.copyWith(
-                        fontSize: 50,
-                        fontWeight: FontWeight.w900,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                ),
-              if (!skippedRound && guessingPlayer != null)
-                Text(
-                  " hat geraten:",
-                  style: subheadingStyle.copyWith(fontSize: 20),
-                  textAlign: TextAlign.center,
-                ),
-              SizedBox(height: 5),
 
-              SizedBox(height: 30),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  if (currentSong?.albumImageUrl != null)
-                    Padding(
-                      padding: const EdgeInsets.only(right: 12),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: Image.network(
-                          currentSong!.albumImageUrl!,
-                          width: 80,
-                          height: 80,
-                          fit: BoxFit.cover,
-                          errorBuilder: (_, __, ___) => const SizedBox.shrink(),
-                        ),
-                      ),
-                    ),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          currentSong?.name ?? "FEHLER",
-                          style: const TextStyle(
-                            fontSize: 26,
-                            fontWeight: FontWeight.bold,
-                            height: 1.3,
-                            color: Colors.white,
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.left,
-                        ),
-
-                        const SizedBox(height: 4),
-                        Text(
-                          currentSong?.artists.join(", ") ?? "FEHLER",
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: Colors.white70,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.left,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(child: Divider(color: Colors.white70)),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    child: Text(
-                      currentSong?.release_date?.split('-').first ?? "NO DATE",
-                      style: const TextStyle(color: Colors.white70),
-                    ),
-                  ),
-                  Expanded(child: Divider(color: Colors.white70)),
-                ],
-              ),
-              SizedBox(height: kDefaultSpacing),
-              if (lastGuessCorrect != null && guessingPlayer != null)
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    vertical: kSmallPadding,
-                    horizontal: kDefaultPadding,
-                  ),
-                  decoration: const BoxDecoration(color: Colors.transparent),
-                  child: Text(
-                    lastGuessCorrect!
-                        ? "${guessingPlayer!.toUpperCase()} GUESSED CORRECTLY!"
-                        : "${guessingPlayer!.toUpperCase()} GUESSED INCORRECTLY",
-                    style: subheadingStyle.copyWith(
-                      color: Colors.white,
-                      fontSize: 18,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              SizedBox(height: kDefaultSpacing),
-              if (lastGuessCorrect == null)
-                Column(
-                  children: [
-                    if (!skippedRound) ...[
-                      ElevatedButton(
-                        onPressed: () => handleGuessResult(true),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          foregroundColor: Colors.black,
-                          elevation: 1,
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          minimumSize: const Size(double.infinity, 56),
-                        ),
-                        child: const Text(
-                          "RICHTIG GERATEN",
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: kDefaultSpacing),
-                      ElevatedButton(
-                        onPressed: () => handleGuessResult(false),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          foregroundColor: Colors.black,
-                          elevation: 1,
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          minimumSize: const Size(double.infinity, 56),
-                        ),
-                        child: const Text(
-                          "LEIDER FALSCH",
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                    ] else ...[
-                      ElevatedButton(
-                        onPressed: () => handleGuessResult(false),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          foregroundColor: Colors.black,
-                          elevation: 1,
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          minimumSize: const Size(double.infinity, 56),
-                        ),
-                        child: const Text(
-                          "WEITER",
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                    ],
-                    SizedBox(height: kDefaultSpacing),
-                    buildScoreBoard(),
-                  ],
-                )
-              else
-                buildScoreBoard(),
-            ],
-          ),
-        );
-
+      case 3: // Countdown state
+        stateWidget = CountdownStateView(countdown: countdown);
         break;
-      case 5: // Game over state
-        stateWidget = Container(
-          padding: EdgeInsets.all(kLargePadding),
-          margin: EdgeInsets.symmetric(horizontal: kDefaultPadding),
-          decoration: BoxDecoration(
-            color: Colors.transparent,
-            border: Border.all(color: Colors.transparent, width: 0),
-          ),
-          child: SizedBox(
-            width: double.infinity,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: Text(
-                    "Spiel vorbei!",
-                    style: headingStyle.copyWith(fontSize: 200),
-                    textAlign: TextAlign.center,
-                    maxLines: 1,
-                    softWrap: false,
-                    overflow: TextOverflow.visible,
-                  ),
-                ),
-                SizedBox(height: kDefaultSpacing),
-                if (_getWinners().length == 1)
-                  Text(
-                    "${_getWinners().first.toUpperCase()} GEWINNT!",
-                    style: subheadingStyle,
-                    textAlign: TextAlign.center,
-                  )
-                else
-                  Text(
-                    "Unendschieden!",
-                    style: subheadingStyle,
-                    textAlign: TextAlign.center,
-                  ),
-                buildScoreBoard(isGameOver: true),
-                SizedBox(height: kDefaultSpacing),
-                Container(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                          builder: (context) => const SetupPage(),
-                        ),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: Colors.black,
-                      elevation: 1,
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      minimumSize: const Size(double.infinity, 56),
-                    ),
-                    child: const Text(
-                      "Zurück zum Menü",
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+
+      case 1: // Guessing state
+        stateWidget = GuessingStateView(
+          roundText: "${roundsPlayed + 1}/${widget.rounds}",
+          gifPath: _currentGif,
+          gifController: _controller,
+          players: players,
+          onPlayerSelected: (p) => handleGuess(p),
+          onSkip: () => handleSkip(),
         );
         break;
+
+      case 2: // Waiting for guess result
+        stateWidget = WaitingForGuessResultView(
+          guessingPlayer: guessingPlayer,
+          countdown: countdown,
+        );
+        break;
+
+      case 4: // Reveal song and choose correct/incorrect (or show result)
+        stateWidget = RevealStateView(
+          skippedRound: skippedRound,
+          guessingPlayer: guessingPlayer,
+          currentSong: currentSong,
+          lastGuessCorrect: lastGuessCorrect,
+          onGuessResult: (v) => handleGuessResult(v),
+          players: players,
+          playerScores: playerScores,
+        );
+        break;
+
+      case 5: // Game over
+        stateWidget = GameOverView(
+          winners: _getWinners(),
+          players: players,
+          playerScores: playerScores,
+          onBackToMenu: () {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => const SetupPage()),
+            );
+          },
+        );
+        break;
+
       default:
-        stateWidget = Text("Unknown state");
+        stateWidget = const Text("Unknown state");
     }
 
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      backgroundColor: const Color(0xFF5A3EFF),
-      body: AnimatedContainer(
-        constraints: const BoxConstraints.expand(),
-        duration: const Duration(milliseconds: 700),
-        curve: Curves.easeInOut,
-        decoration: BoxDecoration(gradient: _currentGradient),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Text(
-                  "HIPSTER",
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 50,
-                    fontWeight: FontWeight.w900,
-                    color: Colors.white,
-                    letterSpacing: 1.2,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Container(
-                  margin: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 16,
-                  ),
-
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: FadeTransition(
-                      opacity: _fadeAnimation,
-                      child: stateWidget,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  static Widget _playerRow(String name, int points) {
-    return Material(
-      color: Colors.transparent,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-        child: Row(
-          children: [
-            Expanded(
-              child: Text(
-                name,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black,
-                ),
-              ),
-            ),
-            Text(
-              "$points",
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-                color: Colors.black,
-              ),
-            ),
-            const SizedBox(width: 8),
-            const Icon(Icons.edit, color: Colors.black38, size: 22),
-          ],
-        ),
-      ),
+    return GameShell(
+      gradient: _currentGradient,
+      fadeAnimation: _fadeAnimation,
+      child: stateWidget,
     );
   }
 }
