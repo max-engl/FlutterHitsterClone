@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:hitsterclone/ArtistSelectionPage.dart';
 import 'package:hitsterclone/PlaylistScreen.dart';
@@ -7,6 +6,7 @@ import 'package:hitsterclone/SearchPlaylistPage.dart';
 import 'package:hitsterclone/MostUsedPlaylistsPage.dart';
 import 'package:provider/provider.dart';
 import 'package:hitsterclone/services/LogicService.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 class PlaylistSourcePage extends StatelessWidget {
   const PlaylistSourcePage({super.key});
@@ -57,7 +57,7 @@ class PlaylistSourcePage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(16),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.05),
+                              color: Colors.black.withValues(alpha: 0.05),
                               blurRadius: 8,
                               offset: const Offset(0, 2),
                             ),
@@ -122,7 +122,10 @@ class PlaylistSourcePage extends StatelessWidget {
                           ],
                         ),
                       ),
-                    ),
+                    )
+                        .animate()
+                        .fade(duration: 600.ms)
+                        .slideY(begin: -0.2, end: 0, curve: Curves.easeOut),
                   Text(
                     "Wähle die Quelle der gewünschten Playlist aus!",
                     style: TextStyle(
@@ -130,7 +133,10 @@ class PlaylistSourcePage extends StatelessWidget {
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
                     ),
-                  ),
+                  )
+                      .animate()
+                      .fade(delay: 200.ms, duration: 600.ms)
+                      .slideY(begin: 0.2, end: 0),
                   Container(
                     margin: const EdgeInsets.symmetric(
                       horizontal: 24,
@@ -141,7 +147,7 @@ class PlaylistSourcePage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(16),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.05),
+                          color: Colors.black.withValues(alpha: 0.05),
                           blurRadius: 8,
                           offset: const Offset(0, 2),
                         ),
@@ -207,9 +213,18 @@ class PlaylistSourcePage extends StatelessWidget {
                             );
                           },
                         ),
-                      ],
+                      ]
+                          .animate(interval: 50.ms)
+                          .fade(duration: 400.ms)
+                          .slideX(begin: 0.1, end: 0, curve: Curves.easeOut),
                     ),
-                  ),
+                  )
+                      .animate()
+                      .fade(delay: 400.ms, duration: 600.ms)
+                      .scale(
+                        begin: const Offset(0.95, 0.95),
+                        curve: Curves.easeOutBack,
+                      ),
                 ],
               ),
             ),

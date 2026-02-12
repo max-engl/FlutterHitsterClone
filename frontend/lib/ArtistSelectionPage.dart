@@ -5,6 +5,7 @@ import 'package:hitsterclone/SetupPage.dart';
 import 'package:provider/provider.dart';
 import 'package:hitsterclone/services/LogicService.dart';
 import 'package:hitsterclone/services/WebApiService.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 class ArtistSelectionPage extends StatefulWidget {
   const ArtistSelectionPage({super.key});
@@ -44,7 +45,6 @@ class _ArtistSelectionPageState extends State<ArtistSelectionPage> {
 
     setState(() => _isSearching = true);
 
-    // Ensure token exists
     String token = Logicservice().token;
     if (token.isEmpty) {
       final fetched = await WebApiService().fetchSpotifyAccessToken();
@@ -70,7 +70,6 @@ class _ArtistSelectionPageState extends State<ArtistSelectionPage> {
   }
 
   Future<void> _selectArtist(Artist artist) async {
-    // Show progress dialog
     showCupertinoDialog(
       context: context,
       barrierDismissible: false,
@@ -95,7 +94,6 @@ class _ArtistSelectionPageState extends State<ArtistSelectionPage> {
       ),
     );
 
-    // Ensure token exists
     String token = Logicservice().token;
     if (token.isEmpty) {
       final fetched = await WebApiService().fetchSpotifyAccessToken();
@@ -113,9 +111,7 @@ class _ArtistSelectionPageState extends State<ArtistSelectionPage> {
     if (mounted) Navigator.of(context).pop();
 
     if (tracks.isEmpty) return;
-    // Print artist details
 
-    // Save and navigate
     Logicservice().setTracks(tracks);
     Logicservice().setPlaylist(
       Playlist(id: artist.id, name: artist.name, imageUrl: artist.imageUrl),
@@ -165,204 +161,241 @@ class _ArtistSelectionPageState extends State<ArtistSelectionPage> {
                 child: Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
-                      child: CupertinoTextField(
-                        controller: _searchController,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 14,
-                        ),
-                        placeholder: 'Suche nach Künstler...',
-                        placeholderStyle: const TextStyle(
-                          color: CupertinoColors.systemGrey,
-                        ),
-                        decoration: BoxDecoration(
-                          color: CupertinoColors.white,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        prefix: const Padding(
-                          padding: EdgeInsets.only(left: 12),
-                          child: Icon(
-                            CupertinoIcons.search,
-                            color: CupertinoColors.systemGrey,
+                          padding: const EdgeInsets.symmetric(horizontal: 24),
+                          child: CupertinoTextField(
+                            controller: _searchController,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 14,
+                            ),
+                            placeholder: 'Suche nach Künstler...',
+                            placeholderStyle: const TextStyle(
+                              color: CupertinoColors.systemGrey,
+                            ),
+                            decoration: BoxDecoration(
+                              color: CupertinoColors.white,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            prefix: const Padding(
+                              padding: EdgeInsets.only(left: 12),
+                              child: Icon(
+                                CupertinoIcons.search,
+                                color: CupertinoColors.systemGrey,
+                              ),
+                            ),
+                            onChanged: _onQueryChanged,
                           ),
-                        ),
-                        onChanged: _onQueryChanged,
-                      ),
-                    ),
+                        )
+                        .animate()
+                        .fade(duration: 400.ms)
+                        .slideY(begin: -0.5, end: 0, curve: Curves.easeOut),
                     const SizedBox(height: 16),
                     Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 24),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 12,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.05),
-                            blurRadius: 8,
-                            offset: const Offset(0, 2),
+                          margin: const EdgeInsets.symmetric(horizontal: 24),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 12,
                           ),
-                        ],
-                      ),
-                      child: Row(
-                        children: [
-                          const Icon(
-                            CupertinoIcons.person_2,
-                            color: Colors.black54,
-                          ),
-                          const SizedBox(width: 12),
-                          const Expanded(
-                            child: Text(
-                              "Mehrere Artists?",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 15,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.05),
+                                blurRadius: 8,
+                                offset: const Offset(0, 2),
                               ),
-                            ),
+                            ],
                           ),
-                          if (_multiArtists)
-                            CupertinoButton(
-                              padding: EdgeInsets.zero,
-                              onPressed: () => setState(
-                                () =>
-                                    _filterSelectedOnly = !_filterSelectedOnly,
+                          child: Row(
+                            children: [
+                              const Icon(
+                                CupertinoIcons.person_2,
+                                color: Colors.black54,
                               ),
-                              child: Icon(
-                                _filterSelectedOnly
-                                    ? CupertinoIcons
-                                          .line_horizontal_3_decrease_circle_fill
-                                    : CupertinoIcons
-                                          .line_horizontal_3_decrease_circle,
-                                color: _filterSelectedOnly
-                                    ? const Color(0xFF5A3EFF)
-                                    : Colors.black54,
-                                size: 24,
-                              ),
-                            ),
-                          const SizedBox(width: 8),
-                          CupertinoSwitch(
-                            value: _multiArtists,
-                            onChanged: (v) => setState(() {
-                              _multiArtists = v;
-                              if (!v) {
-                                _selectedArtistIds.clear();
-                                _selectedArtists.clear();
-                                _filterSelectedOnly = false;
-                              }
-                            }),
-                            activeColor: const Color(0xFF5A3EFF),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(
-                          horizontal: 24,
-                          vertical: 16,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.05),
-                              blurRadius: 8,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: AnimatedSwitcher(
-                          duration: const Duration(milliseconds: 200),
-                          child: _isSearching
-                              ? const SizedBox(
-                                  height: 100,
-                                  child: Center(
-                                    child: CupertinoActivityIndicator(),
+                              const SizedBox(width: 12),
+                              const Expanded(
+                                child: Text(
+                                  "Mehrere Artists?",
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 15,
                                   ),
-                                )
-                              : (_results.isEmpty
-                                    ? const SizedBox(
-                                        height: 100,
-                                        child: Center(
-                                          child: Text(
-                                            'Keine Ergebnisse',
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w500,
-                                              color: Colors.black54,
-                                            ),
+                                ),
+                              ),
+                              if (_multiArtists)
+                                CupertinoButton(
+                                  padding: EdgeInsets.zero,
+                                  onPressed: () => setState(
+                                    () => _filterSelectedOnly =
+                                        !_filterSelectedOnly,
+                                  ),
+                                  child: Icon(
+                                    _filterSelectedOnly
+                                        ? CupertinoIcons
+                                              .line_horizontal_3_decrease_circle_fill
+                                        : CupertinoIcons
+                                              .line_horizontal_3_decrease_circle,
+                                    color: _filterSelectedOnly
+                                        ? const Color(0xFF5A3EFF)
+                                        : Colors.black54,
+                                    size: 24,
+                                  ),
+                                ),
+                              const SizedBox(width: 8),
+                              CupertinoSwitch(
+                                value: _multiArtists,
+                                onChanged: (v) => setState(() {
+                                  _multiArtists = v;
+                                  if (!v) {
+                                    _selectedArtistIds.clear();
+                                    _selectedArtists.clear();
+                                    _filterSelectedOnly = false;
+                                  }
+                                }),
+                                activeColor: const Color(0xFF5A3EFF),
+                              ),
+                            ],
+                          ),
+                        )
+                        .animate()
+                        .fade(delay: 100.ms, duration: 400.ms)
+                        .slideY(begin: -0.2, end: 0, curve: Curves.easeOut),
+                    Expanded(
+                      child:
+                          Container(
+                                clipBehavior: Clip.hardEdge,
+                                margin: const EdgeInsets.symmetric(
+                                  horizontal: 24,
+                                  vertical: 16,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(16),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withValues(
+                                        alpha: 0.05,
+                                      ),
+                                      blurRadius: 8,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: AnimatedSwitcher(
+                                  duration: const Duration(milliseconds: 200),
+                                  child: _isSearching
+                                      ? const SizedBox(
+                                          height: 100,
+                                          child: Center(
+                                            child: CupertinoActivityIndicator(),
                                           ),
-                                        ),
-                                      )
-                                    : ListView.separated(
-                                        itemCount: (_filterSelectedOnly
-                                            ? _selectedArtists.length
-                                            : _results.length),
-                                        separatorBuilder: (_, __) =>
-                                            const Divider(
-                                              height: 1,
-                                              thickness: 0.5,
-                                            ),
-                                        itemBuilder: (context, index) {
-                                          final display = _filterSelectedOnly
-                                              ? _selectedArtists.values.toList()
-                                              : _results;
-                                          final artist = display[index];
-                                          final selected = _selectedArtistIds
-                                              .contains(artist.id);
-                                          return _artistRow(
-                                            artist,
-                                            selected: selected,
-                                            onTap: () {
-                                              if (_multiArtists) {
-                                                _toggleArtistSelection(artist);
-                                              } else {
-                                                _confirmThenSelectArtist(
-                                                  artist,
-                                                );
-                                              }
-                                            },
-                                          );
-                                        },
-                                      )),
-                        ),
-                      ),
+                                        )
+                                      : (_results.isEmpty
+                                            ? const SizedBox(
+                                                height: 100,
+                                                child: Center(
+                                                  child: Text(
+                                                    'Keine Ergebnisse',
+                                                    style: TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      color: Colors.black54,
+                                                    ),
+                                                  ),
+                                                ),
+                                              )
+                                            : ListView.separated(
+                                                    itemCount:
+                                                        (_filterSelectedOnly
+                                                        ? _selectedArtists
+                                                              .length
+                                                        : _results.length),
+                                                    separatorBuilder: (_, __) =>
+                                                        const Divider(
+                                                          height: 1,
+                                                          thickness: 0.5,
+                                                        ),
+                                                    itemBuilder: (context, index) {
+                                                      final display =
+                                                          _filterSelectedOnly
+                                                          ? _selectedArtists
+                                                                .values
+                                                                .toList()
+                                                          : _results;
+                                                      final artist =
+                                                          display[index];
+                                                      final selected =
+                                                          _selectedArtistIds
+                                                              .contains(
+                                                                artist.id,
+                                                              );
+                                                      return _artistRow(
+                                                        artist,
+                                                        selected: selected,
+                                                        onTap: () {
+                                                          if (_multiArtists) {
+                                                            _toggleArtistSelection(
+                                                              artist,
+                                                            );
+                                                          } else {
+                                                            _confirmThenSelectArtist(
+                                                              artist,
+                                                            );
+                                                          }
+                                                        },
+                                                      );
+                                                    },
+                                                  )
+                                                  .animate()
+                                                  .fade(duration: 400.ms)
+                                                  .slideY(begin: 0.1, end: 0)),
+                                ),
+                              )
+                              .animate()
+                              .fade(delay: 200.ms, duration: 600.ms)
+                              .scale(
+                                begin: const Offset(0.95, 0.95),
+                                curve: Curves.easeOutBack,
+                              ),
                     ),
                     if (_multiArtists && _selectedArtistIds.isNotEmpty)
                       Container(
-                        width: double.infinity,
-                        margin: const EdgeInsets.symmetric(
-                          horizontal: 24,
-                          vertical: 8,
-                        ),
-                        child: ElevatedButton(
-                          onPressed: _finishMultiSelection,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            foregroundColor: Colors.black,
-                            elevation: 1,
-                            padding: const EdgeInsets.symmetric(vertical: 14),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30),
+                            width: double.infinity,
+                            margin: const EdgeInsets.symmetric(
+                              horizontal: 24,
+                              vertical: 8,
                             ),
-                            minimumSize: const Size(double.infinity, 52),
-                          ),
-                          child: const Text(
-                            "Fertig",
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.black,
+                            child: ElevatedButton(
+                              onPressed: _finishMultiSelection,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.white,
+                                foregroundColor: Colors.black,
+                                elevation: 1,
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 14,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                                minimumSize: const Size(double.infinity, 52),
+                              ),
+                              child: const Text(
+                                "Fertig",
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black,
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                      )
+                          )
+                          .animate()
+                          .fade(duration: 300.ms)
+                          .slideY(begin: 1, end: 0, curve: Curves.easeOutBack)
+                          .shimmer(delay: 1000.ms, duration: 1500.ms)
                     else
                       const SizedBox(height: 8),
                   ],

@@ -1,7 +1,6 @@
 part of game_page;
 
 extension _GamePageLogic on _GamePageState {
-  // Get a random GIF from the list
   String _getRandomGif() {
     final random = Random();
     return _gifList[random.nextInt(_gifList.length)];
@@ -14,7 +13,6 @@ extension _GamePageLogic on _GamePageState {
     _animationController.forward();
   }
 
-  // Check if game is over based on number of rounds played
   bool _isGameOver() {
     if (roundsPlayed >= widget.rounds) {
       Logicservice().resetTracksToPlay();
@@ -22,7 +20,6 @@ extension _GamePageLogic on _GamePageState {
     return roundsPlayed >= widget.rounds;
   }
 
-  // Get the winner(s) of the game
   List<String> _getWinners() {
     int highestScore = playerScores.values.reduce((a, b) => a > b ? a : b);
     return playerScores.entries
@@ -32,12 +29,11 @@ extension _GamePageLogic on _GamePageState {
   }
 
   Future<void> startGame() async {
-    // Select a new random GIF from the list
     setState(() {
       _currentGif = _getRandomGif();
       countdown = 3;
-      currentState = 3; // New state for countdown
-      lastGuessCorrect = null; // Reset last guess result
+      currentState = 3;
+      lastGuessCorrect = null;
       skippedRound = false;
     });
     _triggerAnimation();
@@ -47,7 +43,7 @@ extension _GamePageLogic on _GamePageState {
         countdown = countdown! - 1;
         if (countdown! <= 0) {
           timer.cancel();
-          currentState = 1; // Switch to guessing state
+          currentState = 1;
           _triggerAnimation();
         }
       });
@@ -60,7 +56,7 @@ extension _GamePageLogic on _GamePageState {
           });
         } else {
           setState(() {
-            currentSong = null; // Handle no-track case
+            currentSong = null;
           });
         }
       }
@@ -71,7 +67,7 @@ extension _GamePageLogic on _GamePageState {
     setState(() {
       guessingPlayer = player;
       currentState = 2;
-      countdown = 5; // Set 5 second countdown for guess result
+      countdown = 5;
     });
     _triggerAnimation();
     SpotifyService().pauseSong();
@@ -81,10 +77,8 @@ extension _GamePageLogic on _GamePageState {
         if (countdown! <= 0) {
           timer.cancel();
 
-          // Instead of determining correctness here, we'll show buttons for user to select
           setState(() {
-            // Reveal the song title and show correct/incorrect buttons
-            currentState = 4; // State to show the song title and guess result
+            currentState = 4;
           });
 
           _triggerAnimation();
@@ -105,26 +99,23 @@ extension _GamePageLogic on _GamePageState {
     _triggerAnimation();
   }
 
-  // New method to handle user's selection of correct/incorrect
-  void handleGuessResult(bool isCorrect) {
-    // Update player score if correct
+  void handleGuessResult(bool isCorrect, bool isNobody) {
     if (isCorrect && guessingPlayer != null) {
       playerScores[guessingPlayer!] = (playerScores[guessingPlayer!] ?? 0) + 1;
+    }
+    if (!isCorrect && !isNobody && Logicservice().decreasePoints) {
+      playerScores[guessingPlayer!] = (playerScores[guessingPlayer!] ?? 0) - 1;
     }
 
     setState(() {
       lastGuessCorrect = isCorrect;
 
-      // Start next song automatically
-      // Increment rounds after each guess resolution
       roundsPlayed += 1;
 
       if (_isGameOver()) {
-        currentState = 5; // Game over state
+        currentState = 5;
       } else {
-        // Pick a new gradient for the next round
         _currentGradient = _pickNextGradient();
-        // Start next song
         startGame();
       }
     });

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:hitsterclone/SetupPage.dart';
 import 'package:hitsterclone/services/LogicService.dart';
 import 'package:hitsterclone/services/WebApiService.dart';
@@ -153,91 +154,118 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
           child: Padding(
             padding: EdgeInsets.all(16),
             child: ClipRect(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
-                        blurRadius: 8,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: isLoading
-                      ? Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [const CupertinoActivityIndicator()],
-                          ),
-                        )
-                      : errorMessage != null
-                      ? Center(
-                          child: Padding(
-                            padding: EdgeInsets.all(AppTheme.kDefaultPadding),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'FAILED TO LOAD',
-                                  style: AppTheme.subheadingStyle,
-                                ),
-                                SizedBox(height: AppTheme.kSmallSpacing),
-                                Text(
-                                  errorMessage!,
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(fontSize: 14),
-                                ),
-                                SizedBox(height: AppTheme.kDefaultSpacing),
-                                SizedBox(
-                                  width: double.infinity,
-                                  child: ElevatedButton(
-                                    onPressed: _loadPlaylists,
-                                    style: AppTheme.primaryButtonStyle,
-                                    child: Text(
-                                      'RETRY',
-                                      style: AppTheme.buttonTextStyle,
-                                    ),
-                                  ),
-                                ),
-                              ],
+              child:
+                  Container(
+                            clipBehavior: Clip.hardEdge,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.05),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
                             ),
-                          ),
-                        )
-                      : Column(
-                          children: [
-                            Expanded(
-                              child: ListView.separated(
-                                itemCount: playlists.length,
-                                separatorBuilder: (_, __) =>
-                                    const Divider(height: 1, thickness: 0.5),
-                                itemBuilder: (context, index) {
-                                  final playlist = playlists[index];
-                                  return _playlistRow(
-                                    playlist,
-                                    onTap: () => _handlePlaylistTap(playlist),
-                                  );
-                                },
-                              ),
-                            ),
-                            // Bottom action removed; selection via dialog on tap
                           ],
                         ),
-                ),
-              ),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(16),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.05),
+                                blurRadius: 8,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: isLoading
+                              ? Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const CupertinoActivityIndicator(),
+                                    ],
+                                  ),
+                                )
+                              : errorMessage != null
+                              ? Center(
+                                  child: Padding(
+                                    padding: EdgeInsets.all(
+                                      AppTheme.kDefaultPadding,
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          'FAILED TO LOAD',
+                                          style: AppTheme.subheadingStyle,
+                                        ),
+                                        SizedBox(
+                                          height: AppTheme.kSmallSpacing,
+                                        ),
+                                        Text(
+                                          errorMessage!,
+                                          textAlign: TextAlign.center,
+                                          style: const TextStyle(fontSize: 14),
+                                        ),
+                                        SizedBox(
+                                          height: AppTheme.kDefaultSpacing,
+                                        ),
+                                        SizedBox(
+                                          width: double.infinity,
+                                          child: ElevatedButton(
+                                            onPressed: _loadPlaylists,
+                                            style: AppTheme.primaryButtonStyle,
+                                            child: Text(
+                                              'RETRY',
+                                              style: AppTheme.buttonTextStyle,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              : Column(
+                                  children: [
+                                    Expanded(
+                                      child:
+                                          ListView.separated(
+                                                itemCount: playlists.length,
+                                                separatorBuilder: (_, __) =>
+                                                    const Divider(
+                                                      height: 1,
+                                                      thickness: 0.5,
+                                                    ),
+                                                itemBuilder: (context, index) {
+                                                  final playlist =
+                                                      playlists[index];
+                                                  return _playlistRow(
+                                                    playlist,
+                                                    onTap: () =>
+                                                        _handlePlaylistTap(
+                                                          playlist,
+                                                        ),
+                                                  );
+                                                },
+                                              )
+                                              .animate()
+                                              .fade(duration: 400.ms)
+                                              .slideY(begin: 0.1, end: 0),
+                                    ),
+                                  ],
+                                ),
+                        ),
+                      )
+                      .animate()
+                      .fade(duration: 600.ms)
+                      .scale(
+                        begin: const Offset(0.95, 0.95),
+                        curve: Curves.easeOutBack,
+                      ),
             ),
           ),
         ),

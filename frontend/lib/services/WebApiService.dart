@@ -7,15 +7,12 @@ import 'package:hitsterclone/services/LogicService.dart';
 import 'package:crypto/crypto.dart';
 
 class WebApiService {
-  // ===== Basics =====
   final _baseApi = 'api.spotify.com';
   final _authBase = 'accounts.spotify.com';
 
-  // Cache/TTL nur intern (keine Device-Daten hier)
   DateTime? _lastDeviceCheckAt;
   final Duration _deviceCheckTtl = const Duration(seconds: 5);
 
-  // ===== Http / Retry =====
   final Duration _baseBackoff = const Duration(milliseconds: 400);
   final int _maxAttempts = 3;
 
@@ -29,9 +26,6 @@ class WebApiService {
     Logicservice().setToken(apiToken);
   }
 
-  // =====================================================
-  // AUTHENTICATION (PKCE)
-  // =====================================================
   Future<String?> fetchSpotifyAccessToken() async {
     final clientId = dotenv.env['SPOTIFY_CLIENT_ID'] ?? '';
     final redirectUri =
@@ -97,9 +91,6 @@ class WebApiService {
     ).join();
   }
 
-  // =====================================================
-  // DEVICE HANDLING (State landet im Logicservice)
-  // =====================================================
   Future<bool> ensureConnected({bool force = false}) async {
     try {
       final token = Logicservice().token;
@@ -127,12 +118,10 @@ class WebApiService {
 
         _lastDeviceCheckAt = DateTime.now();
 
-        // Reset im Logicservice
         Logicservice().setHasDevice(devices.isNotEmpty);
         Logicservice().setActiveDeviceId(null);
         Logicservice().setAvailableDeviceId(null);
 
-        // Auswahl: bevorzugtes Device > aktives > erstes verfügbares
         final preferred = Logicservice().preferredDeviceId;
 
         for (final d in devices.whereType<Map>()) {
@@ -144,12 +133,10 @@ class WebApiService {
             Logicservice().setActiveDeviceId(id);
           }
 
-          // erstes available merken
           if (Logicservice().availableDeviceId == null) {
             Logicservice().setAvailableDeviceId(id);
           }
 
-          // bevorzugtes Device, falls vorhanden, priorisieren
           if (preferred != null && id == preferred) {
             Logicservice().setAvailableDeviceId(id);
           }
@@ -182,7 +169,6 @@ class WebApiService {
     Logicservice().setConnected(false);
     Logicservice().setHasDevice(false);
     Logicservice().setActiveDeviceId(null);
-    // availableDeviceId/pref lassen wir unangetastet (kann als Hint nützlich sein)
     _lastDeviceCheckAt = DateTime.now();
   }
 
@@ -215,10 +201,8 @@ class WebApiService {
     final available = logic.availableDeviceId;
     final preferred = logic.preferredDeviceId;
 
-    // CASE 1: already active
     if (active != null) return true;
 
-    // CASE 2: no active, but we can activate one
     final candidate = preferred ?? available;
     if (candidate != null) {
       final ok = await transferPlaybackTo(candidate, play: true);
@@ -228,13 +212,9 @@ class WebApiService {
       }
     }
 
-    // CASE 3: no usable device
     return false;
   }
 
-  // =====================================================
-  // PLAYBACK CONTROLS (robust, status-korrekt)
-  // =====================================================
   Future<bool> resumePlayback() async {
     try {
       final connected = await ensureActiveDevice(force: true);
@@ -245,7 +225,6 @@ class WebApiService {
           Logicservice().activeDeviceId ?? Logicservice().availableDeviceId;
       if (deviceId != null) params['device_id'] = deviceId;
 
-      // Wenn bereits playing, muss kein Fehler geworfen werden — aber wir schicken play() idempotent
       final uri = Uri.https(_baseApi, '/v1/me/player/play', params);
       final resp = await _put(uri, body: jsonEncode({}));
 
@@ -277,13 +256,11 @@ class WebApiService {
     try {
       await ensureActiveDevice(force: true);
 
-      // Erst State checken: wenn nichts spielt → stiller Erfolg (vermeidet 403 Restriction)
       final stateRes = await _get(Uri.https(_baseApi, '/v1/me/player'));
       if (stateRes != null && stateRes.statusCode == 200) {
         final state = _safeJson(stateRes.body);
         final isPlaying = state['is_playing'] == true;
         if (!isPlaying) {
-          // Nichts läuft → Pause ist ein No-Op
           return;
         }
       }
@@ -317,7 +294,6 @@ class WebApiService {
       final uri = Uri.https(_baseApi, '/v1/me/player/next', params);
       final resp = await _post(uri);
 
-      // Spotify antwortet mit 204 bei Erfolg
       if (resp != null && resp.statusCode == 204) return true;
 
       print('skipToNext failed: ${resp?.statusCode} ${resp?.body}');
@@ -380,9 +356,6 @@ class WebApiService {
     return devices.whereType<Map<String, dynamic>>().toList();
   }
 
-  // =====================================================
-  // PLAYLIST & TRACK FETCH
-  // =====================================================
   Future<List<Playlist>> getUserPlaylists() async {
     final List<Playlist> allPlaylists = [];
     int offset = 0;
@@ -650,9 +623,6 @@ class WebApiService {
     return allTracks;
   }
 
-  // =====================================================
-  // HTTP Helpers (Retry, 429, 5xx)
-  // =====================================================
   Future<http.Response?> _get(Uri uri) =>
       _withRetry(() => http.get(uri, headers: _authHeaders()));
   Future<http.Response?> _put(Uri uri, {String? body}) =>
@@ -667,10 +637,8 @@ class WebApiService {
     for (int attempt = 1; attempt <= _maxAttempts; attempt++) {
       try {
         final resp = await send();
-        // Erfolg oder Clientfehler (außer 429) → kein weiterer Retry
         if (resp.statusCode < 500 && resp.statusCode != 429) return resp;
 
-        // 429 → respect Retry-After
         if (resp.statusCode == 429) {
           final retrySec = int.tryParse(resp.headers['retry-after'] ?? '') ?? 1;
           await Future.delayed(Duration(seconds: retrySec));

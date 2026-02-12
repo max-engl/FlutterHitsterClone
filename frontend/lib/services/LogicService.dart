@@ -13,9 +13,26 @@ class Logicservice extends ChangeNotifier {
   Logicservice._internal() {
     initFuture = _initialize();
   }
+  bool _decreasePoints = false;
+
+  bool get decreasePoints => _decreasePoints;
+
+  void setDecreasePoints(bool value) {
+    _decreasePoints = value;
+    notifyListeners();
+    _saveDecreasePoints();
+  }
+
+  Future<void> _saveDecreasePoints() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool(_decreasePointsKey, _decreasePoints);
+    } catch (_) {}
+  }
 
   static const String _playersKey = 'players';
   static const String _hasSeenStartupKey = 'has_seen_startup';
+  static const String _decreasePointsKey = 'decrease_points';
 
   List<Track> _tracks = [];
   List<Track> _trackYetToPlay = [];
@@ -26,14 +43,12 @@ class Logicservice extends ChangeNotifier {
   bool _connected = false;
   String _token = '';
 
-  // NEW
   String? _activeDeviceId;
   String? _availableDeviceId;
   String? _preferredDeviceId;
   bool _hasDevice = false;
-  String? _currentDeviceName; // display in SetupPage
+  String? _currentDeviceName;
 
-  // NEW
   bool? _playListType;
 
   bool get connected => _connected;
@@ -51,7 +66,6 @@ class Logicservice extends ChangeNotifier {
   String? get preferredDeviceId => _preferredDeviceId;
   String? get currentDeviceName => _currentDeviceName;
 
-  // NEW
   bool? get playListType => _playListType;
 
   List<String> _players = [];
@@ -196,8 +210,19 @@ class Logicservice extends ChangeNotifier {
     } catch (_) {}
   }
 
+  Future<void> _loadDecreasePoints() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      _decreasePoints = prefs.getBool(_decreasePointsKey) ?? false;
+    } catch (_) {}
+  }
+
   Future<void> _initialize() async {
-    await Future.wait([_loadPlayers(), _loadStartupFlag()]);
+    await Future.wait([
+      _loadPlayers(),
+      _loadStartupFlag(),
+      _loadDecreasePoints(),
+    ]);
   }
 
   Future<void> markStartupSeen() async {
