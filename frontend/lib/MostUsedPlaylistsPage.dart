@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:hitsterclone/SetupPage.dart';
 import 'package:hitsterclone/services/LogicService.dart';
 import 'package:hitsterclone/services/WebApiService.dart';
@@ -167,56 +168,77 @@ class _MostUsedPlaylistsPageState extends State<MostUsedPlaylistsPage> {
           child: Column(
             children: [
               Expanded(
-                child: Container(
-                  margin: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 16,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
-                        blurRadius: 8,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 200),
-                    child: isLoading
-                        ? const SizedBox(
-                            height: 100,
-                            child: Center(child: CupertinoActivityIndicator()),
-                          )
-                        : (playlists.isEmpty
-                              ? const SizedBox(
-                                  height: 100,
-                                  child: Center(
-                                    child: Text(
-                                      'Keine Ergebnisse',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.black54,
-                                      ),
+                child:
+                    Container(
+                          margin: const EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 16,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(16),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.05),
+                                blurRadius: 8,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 200),
+                            child: isLoading
+                                ? const SizedBox(
+                                    height: 100,
+                                    child: Center(
+                                      child: CupertinoActivityIndicator(),
                                     ),
-                                  ),
-                                )
-                              : ListView.separated(
-                                  itemCount: playlists.length,
-                                  separatorBuilder: (_, __) =>
-                                      const Divider(height: 1, thickness: 0.5),
-                                  itemBuilder: (context, index) => _playlistRow(
-                                    playlists[index],
-                                    used: usageById[playlists[index].id] ?? 0,
-                                    onTap: () =>
-                                        _handlePlaylistTap(playlists[index]),
-                                  ),
-                                )),
-                  ),
-                ),
+                                  )
+                                : (playlists.isEmpty
+                                      ? const SizedBox(
+                                          height: 100,
+                                          child: Center(
+                                            child: Text(
+                                              'Keine Ergebnisse',
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w500,
+                                                color: Colors.black54,
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      : ListView.separated(
+                                              itemCount: playlists.length,
+                                              separatorBuilder: (_, __) =>
+                                                  const Divider(
+                                                    height: 1,
+                                                    thickness: 0.5,
+                                                  ),
+                                              itemBuilder: (context, index) =>
+                                                  _playlistRow(
+                                                    playlists[index],
+                                                    used:
+                                                        usageById[playlists[index]
+                                                            .id] ??
+                                                        0,
+                                                    onTap: () =>
+                                                        _handlePlaylistTap(
+                                                          playlists[index],
+                                                        ),
+                                                  ),
+                                            )
+                                            .animate()
+                                            .fade(duration: 400.ms)
+                                            .slideY(begin: 0.1, end: 0)),
+                          ),
+                        )
+                        .animate()
+                        .fade(duration: 600.ms)
+                        .scale(
+                          begin: const Offset(0.95, 0.95),
+                          curve: Curves.easeOutBack,
+                        ),
               ),
               const SizedBox(height: 8),
             ],

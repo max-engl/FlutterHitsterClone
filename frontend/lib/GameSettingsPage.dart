@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:hitsterclone/services/LogicService.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 class GameSettingsPage extends StatefulWidget {
   const GameSettingsPage({super.key});
@@ -12,7 +13,6 @@ class GameSettingsPage extends StatefulWidget {
 }
 
 class _GameSettingsPageState extends State<GameSettingsPage> {
-  // Placeholder values for toggles
   bool _soundEnabled = true;
   bool _fastMode = false;
 
@@ -187,7 +187,7 @@ class _GameSettingsPageState extends State<GameSettingsPage> {
                         borderRadius: BorderRadius.circular(16),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.05),
+                            color: Colors.black.withValues(alpha: 0.05),
                             blurRadius: 8,
                             offset: const Offset(0, 2),
                           ),
@@ -213,9 +213,18 @@ class _GameSettingsPageState extends State<GameSettingsPage> {
                               activeColor: const Color(0xFF7A5EFF),
                             ),
                           ),
-                        ],
+                        ]
+                            .animate(interval: 50.ms)
+                            .fade(duration: 400.ms)
+                            .slideX(begin: 0.1, end: 0, curve: Curves.easeOut),
                       ),
-                    ),
+                    )
+                        .animate()
+                        .fade(duration: 600.ms)
+                        .scale(
+                          begin: const Offset(0.95, 0.95),
+                          curve: Curves.easeOutBack,
+                        ),
                   ],
                 ),
               ),

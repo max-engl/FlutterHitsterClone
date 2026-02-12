@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:hitsterclone/SetupPage.dart';
+import 'package:marquee/marquee.dart';
 import 'package:provider/provider.dart';
 import 'package:hitsterclone/services/LogicService.dart';
 
@@ -50,7 +52,6 @@ class StartUpPage extends StatelessWidget {
             child: const Text('Ja'),
             onPressed: () {
               Navigator.of(ctx).pop();
-              // Mark startup as seen so future launches skip this page
               context.read<Logicservice>().markStartupSeen();
               Navigator.pushReplacement(
                 context,
@@ -84,106 +85,148 @@ class StartUpPage extends StatelessWidget {
               children: [
                 const Spacer(flex: 2),
 
-                // App name centered and bold
                 const Text(
-                  'HIPSTER',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 60,
-                    fontWeight: FontWeight.w900,
-                    color: Colors.white,
-                    letterSpacing: 2.0,
-                    height: 1.1,
-                  ),
-                ),
+                      'HIPSTER',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 60,
+                        fontWeight: FontWeight.w900,
+                        color: Colors.white,
+                        letterSpacing: 2.0,
+                        height: 1.1,
+                      ),
+                    )
+                    .animate()
+                    .fade(duration: 800.ms)
+                    .slideY(begin: -0.2, end: 0, curve: Curves.easeOutBack)
+                    .shimmer(delay: 1500.ms, duration: 1500.ms),
                 const SizedBox(height: 10),
-                const Text(
-                  'MUSIK. WISSEN. SPASS.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white70,
-                    fontWeight: FontWeight.w500,
-                    letterSpacing: 1.1,
-                  ),
-                ),
-
-                const Spacer(),
-
-                // Card-like info section
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 26,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: Colors.white24, width: 1),
-                  ),
-                  child: Column(
-                    children: const [
-                      Text(
-                        'Willkommen!',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 30,
-                          fontWeight: FontWeight.w800,
-                          color: Colors.white,
-                          letterSpacing: 0.5,
-                        ),
-                      ),
-                      SizedBox(height: 12),
-                      Text(
-                        'Um fortzufahren benötigst du Spotify Premium.',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white,
-                          height: 1.4,
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      Text(
-                        'Bitte bestätige, dass du Spotify Premium besitzt.',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.white70,
-                          height: 1.3,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                const Spacer(),
-
-                // Button
                 SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () => _showPremiumConfirmDialog(context),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: Colors.black,
-                      elevation: 3,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(32),
-                      ),
-                      textStyle: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: 0.3,
-                      ),
+                  height: 50,
+                  child: Marquee(
+                    text: 'Musik - Wissen - Spaß - ',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white70,
+                      fontWeight: FontWeight.w500,
+                      letterSpacing: 1.1,
                     ),
-                    child: const Text('Weiter'),
+                    scrollAxis: Axis.horizontal,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    velocity: 50.0,
+
+                    startPadding: 10.0,
+
+                    fadingEdgeEndFraction: 0.5,
+                    fadingEdgeStartFraction: 0.5,
                   ),
-                ),
+                ).animate().fade(delay: 400.ms, duration: 600.ms),
+                const Spacer(),
+
+                Container(
+                      clipBehavior: Clip.hardEdge,
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 26,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(color: Colors.white24, width: 1),
+                      ),
+                      child: Column(
+                        children: const [
+                          Text(
+                            'Willkommen!',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 30,
+                              fontWeight: FontWeight.w800,
+                              color: Colors.white,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
+                          SizedBox(height: 12),
+                          Text(
+                            'Um fortzufahren benötigst du Spotify Premium.',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 17,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.white,
+                              height: 1.4,
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            'Bitte bestätige, dass du Spotify Premium besitzt.',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.white70,
+                              height: 1.3,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                    .animate()
+                    .fade(delay: 600.ms, duration: 600.ms)
+                    .scale(
+                      begin: const Offset(0.9, 0.9),
+                      curve: Curves.easeOut,
+                    ),
+
+                const Spacer(),
+
+                SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () => _showPremiumConfirmDialog(context),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          foregroundColor: Colors.black,
+                          elevation: 3,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(32),
+                          ),
+                          textStyle: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 0.3,
+                          ),
+                        ),
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Center(child: Text('Weiter')),
+                            Positioned(
+                              right: 12,
+                              child:
+                                  Container(
+                                        child: Icon(
+                                          Icons.arrow_forward,
+                                          size: 25,
+                                        ),
+                                      )
+                                      .animate(
+                                        delay: 200.ms,
+                                        onPlay: (controller) =>
+                                            controller.repeat(),
+                                      )
+                                      .shake(delay: 500.ms),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                    .animate()
+                    .fade(delay: 800.ms, duration: 600.ms)
+                    .slideY(begin: 1, end: 0, curve: Curves.easeOutBack)
+                    .shimmer(delay: 1500.ms, duration: 1500.ms),
 
                 const Spacer(flex: 2),
               ],

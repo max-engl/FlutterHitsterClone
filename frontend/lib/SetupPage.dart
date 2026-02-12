@@ -1,14 +1,16 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hitsterclone/AddPlayersPage.dart';
 import 'package:hitsterclone/GamePage.dart';
+import 'package:hitsterclone/GameSettingsPage.dart';
 import 'package:hitsterclone/PlaylistSourcePage.dart';
+import 'package:marquee/marquee.dart';
 import 'package:provider/provider.dart';
 import 'package:hitsterclone/services/LogicService.dart';
 import 'package:hitsterclone/services/WebApiService.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 class SetupPage extends StatelessWidget {
   const SetupPage({super.key});
@@ -29,7 +31,13 @@ class SetupPage extends StatelessWidget {
           CupertinoDialogAction(
             isDefaultAction: true,
             child: const Text('OK'),
-            onPressed: () => Navigator.of(ctx).pop(),
+            onPressed: () {
+              Navigator.of(ctx).pop();
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const AddPlayersPage()),
+              );
+            },
           ),
         ],
       ),
@@ -272,7 +280,6 @@ class SetupPage extends StatelessWidget {
   }
 
   Future<void> _connectOrCheckSpotify(BuildContext context) async {
-    // Try to authorize if token is missing, otherwise refresh device status
     try {
       String token = Logicservice().token;
       if (token.isEmpty) {
@@ -284,7 +291,6 @@ class SetupPage extends StatelessWidget {
         WebApiService().setToken(fetched);
       }
 
-      // Refresh connection, then fetch available devices and let user choose
       await WebApiService().ensureConnected(force: true);
       final devices = await WebApiService().getDevices();
 
@@ -366,7 +372,6 @@ class SetupPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<Logicservice>(
       builder: (context, logic, _) {
-        // Clamp rounds to the available tracks length if needed
         final int maxRounds = logic.tracks.length;
         final int currentRounds = logic.rounds;
         if (currentRounds > maxRounds && maxRounds > 0) {
@@ -398,169 +403,250 @@ class SetupPage extends StatelessWidget {
             child: SafeArea(
               child: Column(
                 children: [
+                  SizedBox(height: 30),
                   Text(
-                    "HIPSTER",
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 50,
-                      fontWeight: FontWeight.w900,
-                      color: Colors.white,
-                      letterSpacing: 1.2,
-                    ),
-                  ),
+                        "HIPSTER",
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 50,
+                          fontWeight: FontWeight.w900,
+                          color: Colors.white,
+                          letterSpacing: 1.2,
+                        ),
+                      )
+                      .animate()
+                      .fade(duration: 800.ms)
+                      .slideY(begin: -0.5, end: 0, curve: Curves.easeOutBack)
+                      .shimmer(delay: 1000.ms, duration: 1500.ms),
 
-                  const Text(
-                    'MUSIK. WISSEN. SPASS.',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white70,
-                      fontWeight: FontWeight.w500,
-                      letterSpacing: 1.1,
-                    ),
-                  ),
+                  SizedBox(
+                        height: 50,
+                        child: Marquee(
+                          text: 'Musik 🎶 Wissen 🎵 Spaß 🎵 ',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.white.withValues(alpha: 0.7),
+                            fontWeight: FontWeight.w500,
+                            letterSpacing: 1.1,
+                          ),
+                          scrollAxis: Axis.horizontal,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          velocity: 50.0,
+
+                          startPadding: 10.0,
+
+                          fadingEdgeEndFraction: 0.5,
+                          fadingEdgeStartFraction: 0.5,
+                        ),
+                      )
+                      .animate()
+                      .fade(delay: 200.ms, duration: 600.ms)
+                      .slideX(begin: -0.1, end: 0),
                   const SizedBox(height: 16),
                   Container(
-                    margin: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 16,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.05),
-                          blurRadius: 8,
-                          offset: const Offset(0, 2),
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 16,
                         ),
-                      ],
-                    ),
-                    child: Column(
-                      children: [
-                        _settingsRow(
-                          FontAwesomeIcons.spotify,
-                          "Spotify",
-                          spotifyStatus,
-                          onTap: () => _connectOrCheckSpotify(context),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(25),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.05),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
                         ),
-                        const Divider(height: 1, thickness: 0.5),
-                        _settingsRow(
-                          "📱",
-                          "Device",
-                          deviceName,
-                          onTap: () => _connectOrCheckSpotify(context),
+                        child: Column(
+                          children:
+                              [
+                                    _settingsRow(
+                                      FontAwesomeIcons.spotify,
+                                      "Spotify",
+                                      spotifyStatus,
+                                      onTap: () =>
+                                          _connectOrCheckSpotify(context),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 20,
+                                      ),
+                                      child: const Divider(
+                                        height: 1,
+                                        thickness: 0.5,
+                                      ),
+                                    ),
+                                    _settingsRow(
+                                      "📱",
+                                      "Spiel-Gerät",
+                                      deviceName,
+                                      onTap: () =>
+                                          _connectOrCheckSpotify(context),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 20,
+                                      ),
+                                      child: const Divider(
+                                        height: 1,
+                                        thickness: 0.5,
+                                      ),
+                                    ),
+                                    _settingsRow(
+                                      "🫱",
+                                      "Spieler",
+                                      Logicservice().players.length.toString(),
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const AddPlayersPage(),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 20,
+                                      ),
+                                      child: const Divider(
+                                        height: 1,
+                                        thickness: 0.5,
+                                      ),
+                                    ),
+                                    _settingsRow(
+                                      "📀",
+                                      "Playlist",
+                                      Logicservice().playlist?.name ?? '',
+                                      onTap: () {
+                                        if (Logicservice().token.isEmpty) {
+                                          _showSpotifyRequiredDialog(context);
+                                          return;
+                                        }
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const PlaylistSourcePage(),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 20,
+                                      ),
+                                      child: const Divider(
+                                        height: 1,
+                                        thickness: 0.5,
+                                      ),
+                                    ),
+                                    _settingsRow(
+                                      "⚙️",
+                                      "Spiel-Einstellungen",
+                                      "",
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const GameSettingsPage(),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ]
+                                  .animate(interval: 50.ms)
+                                  .fade(duration: 400.ms)
+                                  .slideX(
+                                    begin: 0.1,
+                                    end: 0,
+                                    curve: Curves.easeOut,
+                                  ),
                         ),
-                        const Divider(height: 1, thickness: 0.5),
-                        _settingsRow(
-                          "🫱",
-                          "Spieler",
-                          Logicservice().players.length.toString(),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const AddPlayersPage(),
-                              ),
-                            );
-                          },
-                        ),
-                        const Divider(height: 1, thickness: 0.5),
-                        _settingsRow(
-                          "📀",
-                          "Playlist",
-                          Logicservice().playlist?.name ?? '',
-                          onTap: () {
-                            if (Logicservice().token.isEmpty) {
-                              _showSpotifyRequiredDialog(context);
-                              return;
-                            }
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const PlaylistSourcePage(),
-                              ),
-                            );
-                          },
-                        ),
-                        const Divider(height: 1, thickness: 0.5),
-                        _settingsRow(
-                          "🎮",
-                          "Runden Anzahl",
-                          logic.rounds.toString(),
-                          onTap: () => _showRoundsDialog(context, logic),
-                        ),
-                      ],
-                    ),
-                  ),
+                      )
+                      .animate()
+                      .fade(delay: 400.ms, duration: 600.ms)
+                      .scale(
+                        begin: const Offset(0.95, 0.95),
+                        delay: 400.ms,
+                        curve: Curves.easeOutBack,
+                      ),
                   const Spacer(),
                   ElevatedButton(
-                    onPressed: () async {
-                      final playerCount = logic.players.length;
-                      if (playerCount < 2) {
-                        _showMinimumPlayersDialog(context);
-                        return;
-                      }
+                        onPressed: () async {
+                          final playerCount = logic.players.length;
+                          if (playerCount < 2) {
+                            _showMinimumPlayersDialog(context);
 
-                      if (logic.playlist == null) {
-                        _showPlaylistRequiredDialog(context);
-                        return;
-                      }
+                            return;
+                          }
 
-                      final int maxRounds = logic.tracks.length;
-                      final int rounds = logic.rounds;
-                      if (maxRounds < 1) {
-                        _showPlaylistRequiredDialog(context);
-                        return;
-                      }
-                      if (rounds < 1 || rounds > maxRounds) {
-                        _showRoundsRequiredDialog(context, logic);
-                        return;
-                      }
+                          if (logic.playlist == null) {
+                            _showPlaylistRequiredDialog(context);
+                            return;
+                          }
 
-                      // Require Spotify auth and a selected device
-                      if (logic.token.isEmpty) {
-                        _showSpotifyRequiredDialog(context);
-                        return;
-                      }
-                      if (logic.preferredDeviceId == null) {
-                        _showDeviceSelectionRequiredDialog(context);
-                        return;
-                      }
+                          final int maxRounds = logic.tracks.length;
+                          final int rounds = logic.rounds;
+                          if (maxRounds < 1) {
+                            _showPlaylistRequiredDialog(context);
+                            return;
+                          }
+                          if (rounds < 1 || rounds > maxRounds) {
+                            _showRoundsRequiredDialog(context, logic);
+                            return;
+                          }
 
-                      final hasActive = await WebApiService()
-                          .ensureActiveDevice(force: true);
-                      if (!hasActive) {
-                        _showActiveDeviceRequiredDialog(context);
-                        return;
-                      }
+                          // Require Spotify auth and a selected device
+                          if (logic.token.isEmpty) {
+                            _showSpotifyRequiredDialog(context);
+                            return;
+                          }
+                          if (logic.preferredDeviceId == null) {
+                            _showDeviceSelectionRequiredDialog(context);
+                            return;
+                          }
 
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => GamePage(rounds: rounds),
+                          final hasActive = await WebApiService()
+                              .ensureActiveDevice(force: true);
+                          if (!hasActive) {
+                            _showActiveDeviceRequiredDialog(context);
+                            return;
+                          }
+
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => GamePage(rounds: rounds),
+                            ),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          foregroundColor: Colors.black,
+                          elevation: 1,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 30,
+                            vertical: 15,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          textStyle: const TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: Colors.black,
-                      elevation: 1,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 30,
-                        vertical: 14,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      textStyle: const TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    child: const Text("Spiel starten"),
-                  ),
+                        child: const Text("Spiel starten"),
+                      )
+                      .animate()
+                      .fade(delay: 800.ms)
+                      .slideY(begin: 1, end: 0, curve: Curves.easeOutBack)
+                      .shimmer(delay: 2000.ms, duration: 1500.ms),
                 ],
               ),
             ),

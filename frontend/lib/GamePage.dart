@@ -1,10 +1,9 @@
 library game_page;
 
-import 'dart:convert';
 import 'dart:async';
 import 'dart:math';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gif/gif.dart';
 import 'package:hitsterclone/SetupPage.dart';
 import 'package:hitsterclone/services/LogicService.dart';
@@ -23,7 +22,6 @@ class GamePage extends StatefulWidget {
 
 class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
   late final GifController _controller;
-  bool _connected = false;
   int currentSongIndex = 0;
   int currentState = 0;
   String? guessingPlayer;
@@ -35,11 +33,9 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
   Track? currentSong;
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
-  String _currentGif = "assets/gifs/xz.gif"; // Default GIF
+  String _currentGif = "assets/gifs/xz.gif";
 
-  // Gradient palette and current gradient
   final List<LinearGradient> _gradientPalette = const [
-    // Purples
     LinearGradient(
       colors: [Color(0xFF9A7BFF), Color(0xFF7A5EFF), Color(0xFF5A3EFF)],
       begin: Alignment.topCenter,
@@ -61,7 +57,6 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
       end: Alignment.bottomCenter,
     ),
 
-    // Blues
     LinearGradient(
       colors: [Color(0xFF5EA1FF), Color(0xFF2A6BFF), Color(0xFF0A3EFF)],
       begin: Alignment.topCenter,
@@ -93,7 +88,6 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
       end: Alignment.bottomCenter,
     ),
 
-    // Teal / Aqua
     LinearGradient(
       colors: [Color(0xFFB2FFDA), Color(0xFF66E8A3), Color(0xFF2BBF8A)],
       begin: Alignment.topCenter,
@@ -120,7 +114,6 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
       end: Alignment.bottomCenter,
     ),
 
-    // Greens
     LinearGradient(
       colors: [Color(0xFF86EFAC), Color(0xFF22C55E), Color(0xFF166534)],
       begin: Alignment.topCenter,
@@ -142,7 +135,6 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
       end: Alignment.bottomCenter,
     ),
 
-    // Yellows / Oranges
     LinearGradient(
       colors: [Color(0xFFFFD57A), Color(0xFFFF9E5A), Color(0xFFFF6B3E)],
       begin: Alignment.topCenter,
@@ -174,7 +166,6 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
       end: Alignment.bottomCenter,
     ),
 
-    // Reds / Pinks
     LinearGradient(
       colors: [Color(0xFFFFA3A3), Color(0xFFFF6F91), Color(0xFF7E5CFF)],
       begin: Alignment.topCenter,
@@ -206,7 +197,6 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
       end: Alignment.bottomCenter,
     ),
 
-    // Magenta / Violet mixes
     LinearGradient(
       colors: [Color(0xFFE879F9), Color(0xFFD946EF), Color(0xFF7E22CE)],
       begin: Alignment.topCenter,
@@ -233,7 +223,6 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
       end: Alignment.bottomCenter,
     ),
 
-    // Cool Cyan to Purple transitions
     LinearGradient(
       colors: [Color(0xFF80FFEA), Color(0xFF8E7DFF), Color(0xFF7350FF)],
       begin: Alignment.topCenter,
@@ -260,7 +249,6 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
       end: Alignment.bottomCenter,
     ),
 
-    // Blue to Pink gradients
     LinearGradient(
       colors: [Color(0xFF38BDF8), Color(0xFF818CF8), Color(0xFFF472B6)],
       begin: Alignment.topCenter,
@@ -287,7 +275,6 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
       end: Alignment.bottomCenter,
     ),
 
-    // Deep / dark gradients
     LinearGradient(
       colors: [Color(0xFF1E293B), Color(0xFF334155), Color(0xFF0F172A)],
       begin: Alignment.topCenter,
@@ -334,7 +321,6 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
     "assets/gifs/y5.gif",
   ];
 
-  // Select next gradient (avoid repeating last)
   LinearGradient _pickNextGradient() {
     final r = Random();
     int nextIndex;
@@ -349,13 +335,10 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
     return _gradientPalette[nextIndex];
   }
 
-  // Add player score tracking
   Map<String, int> playerScores = {};
   bool? lastGuessCorrect;
   static const int winningScore = 10;
   int roundsPlayed = 0;
-
-  // loadJsonFromAssets moved to extension
 
   @override
   void initState() {
@@ -374,18 +357,14 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
     );
     _animationController.forward();
 
-    // Select a random GIF
     _currentGif = _getRandomGif();
 
-    // Initialize first gradient
     _currentGradient = _pickNextGradient();
 
-    // Initialize player scores
     for (var player in players) {
       playerScores[player] = 0;
     }
 
-    // Start game immediately after first frame
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await startGame();
     });
@@ -399,23 +378,40 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
     super.dispose();
   }
 
-  // _triggerAnimation moved to extension
-
-  // Check if any player has reached the winning score
-  // Game over check moved to extension (rounds-based)
-
-  // Get the winner(s) of the game
-  // _getWinners moved to extension
-
-  // startGame moved to extension
-
-  // handleGuess moved to extension
-
-  // New method to handle user's selection of correct/incorrect (moved to extension)
+  Widget _buildAnimatedCountdown(int count, {double fontSize = 120}) {
+    return Text(
+          "$count",
+          style: TextStyle(
+            fontSize: fontSize,
+            fontWeight: FontWeight.w900,
+            color: Colors.white,
+            shadows: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.3),
+                blurRadius: 20,
+                offset: const Offset(0, 10),
+              ),
+            ],
+          ),
+        )
+        .animate(key: ValueKey(count))
+        .fadeIn(duration: 250.ms)
+        .scale(
+          begin: const Offset(0.5, 0.5),
+          end: const Offset(1.0, 1.0),
+          duration: 750.ms,
+          curve: Curves.elasticOut,
+        )
+        .blur(
+          begin: const Offset(10, 10),
+          end: Offset.zero,
+          duration: 400.ms,
+          curve: Curves.easeOut,
+        );
+  }
 
   @override
   Widget build(BuildContext context) {
-    // Define consistent text styles
     final TextStyle headingStyle = TextStyle(
       fontSize: 28,
       fontWeight: FontWeight.w800,
@@ -430,97 +426,141 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
       color: Colors.white,
     );
 
-    final TextStyle buttonTextStyle = TextStyle(
-      fontSize: 18,
-      fontWeight: FontWeight.w600,
-      letterSpacing: 2.0,
-      color: Colors.white,
-    );
-
-    final TextStyle countdownStyle = TextStyle(
-      fontSize: 120,
-      fontWeight: FontWeight.w900,
-      color: Colors.white,
-    );
-
-    final TextStyle scoreStyle = TextStyle(
-      fontSize: 16,
-      fontWeight: FontWeight.w600,
-      letterSpacing: 1.0,
-      color: Colors.white,
-    );
-
-    // Define consistent spacing
     const double kDefaultPadding = 24.0;
     const double kLargePadding = 40.0;
     const double kSmallPadding = 16.0;
     const double kDefaultSpacing = 15.0;
-    const double kLargeSpacing = 50.0;
     const double kSmallSpacing = 20.0;
 
-    // Create a reusable widget for displaying scores
-    // Build a scoreboard widget to display player scores
     Widget buildScoreBoard({bool isGameOver = false}) {
-      final highestScore = playerScores.values.reduce(max);
+      final highestScore = playerScores.isEmpty
+          ? 0
+          : playerScores.values.reduce(max);
 
       return Container(
-        margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
+        margin: const EdgeInsets.symmetric(vertical: 24),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Column(
+          children: [
+            Text(
+              "SCOREBOARD",
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w900,
+                letterSpacing: 3.0,
+                color: Colors.white.withValues(alpha: 0.8),
+              ),
+            ),
+            const SizedBox(height: 20),
+            Column(
+              children: AnimateList(
+                interval: 100.ms,
+                effects: [
+                  FadeEffect(duration: 600.ms, curve: Curves.easeOut),
+                  SlideEffect(
+                    begin: const Offset(0, 0.3),
+                    end: Offset.zero,
+                    duration: 600.ms,
+                    curve: Curves.easeOutBack,
+                  ),
+                ],
+                children: players.map((player) {
+                  final score = playerScores[player] ?? 0;
+                  final isLeader = score == highestScore && score > 0;
+                  final isWinner = isGameOver && isLeader;
+
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            if (isWinner)
+                              Padding(
+                                padding: const EdgeInsets.only(right: 8),
+                                child:
+                                    const Icon(
+                                          Icons.emoji_events,
+                                          color: Colors.amber,
+                                          size: 20,
+                                        )
+                                        .animate(onPlay: (c) => c.repeat())
+                                        .shimmer(
+                                          duration: 2000.ms,
+                                          color: Colors.white,
+                                        )
+                                        .scale(
+                                          begin: const Offset(0.8, 0.8),
+                                          end: const Offset(1.2, 1.2),
+                                          duration: 1000.ms,
+                                          curve: Curves.easeInOut,
+                                          alignment: Alignment.center,
+                                        )
+                                        .then()
+                                        .scale(
+                                          begin: const Offset(1.2, 1.2),
+                                          end: const Offset(0.8, 0.8),
+                                          duration: 1000.ms,
+                                          curve: Curves.easeInOut,
+                                        ),
+                              ),
+                            Text(
+                              player.toUpperCase(),
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: isLeader
+                                    ? FontWeight.w900
+                                    : FontWeight.w500,
+                                color: isLeader
+                                    ? Colors.white
+                                    : Colors.white.withValues(alpha: 0.8),
+                                letterSpacing: 1.0,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 8,
+                              ),
+                              decoration: BoxDecoration(
+                                color: isLeader
+                                    ? Colors.white
+                                    : Colors.white.withValues(alpha: 0.1),
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              child: Text(
+                                "$score",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w900,
+                                  color: isLeader ? Colors.black : Colors.white,
+                                ),
+                              ),
+                            )
+                            .animate(target: isLeader ? 1 : 0)
+                            .scale(
+                              begin: const Offset(1, 1),
+                              end: const Offset(1.1, 1.1),
+                              duration: 500.ms,
+                              curve: Curves.easeInOut,
+                            )
+                            .then()
+                            .scale(
+                              begin: const Offset(1.1, 1.1),
+                              end: const Offset(1, 1),
+                              duration: 500.ms,
+                              curve: Curves.easeInOut,
+                            ),
+                      ],
+                    ),
+                  );
+                }).toList(),
+              ),
             ),
           ],
-        ),
-        child: Padding(
-          padding: EdgeInsets.all(kDefaultPadding),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Punktestand:",
-                style: scoreStyle.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              ),
-              SizedBox(height: kSmallSpacing),
-              ...players.map((player) {
-                final isWinner =
-                    isGameOver && playerScores[player] == highestScore;
-                return Padding(
-                  padding: EdgeInsets.only(bottom: 4),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        player.toUpperCase(),
-                        style: scoreStyle.copyWith(
-                          fontWeight: isWinner
-                              ? FontWeight.bold
-                              : FontWeight.normal,
-                          color: Colors.black,
-                        ),
-                      ),
-                      Text(
-                        "${playerScores[player]}",
-                        style: scoreStyle.copyWith(
-                          fontWeight: isWinner
-                              ? FontWeight.bold
-                              : FontWeight.normal,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              }).toList(),
-            ],
-          ),
         ),
       );
     }
@@ -528,7 +568,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
     Widget stateWidget;
 
     switch (currentState) {
-      case 0: // Initial state
+      case 0:
         stateWidget = Column(
           children: [
             Consumer<Logicservice>(
@@ -624,16 +664,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
             color: Colors.transparent,
             border: Border.all(color: Colors.transparent, width: 0),
           ),
-          child: TweenAnimationBuilder<double>(
-            tween: Tween<double>(begin: 0.5, end: 1.0),
-            duration: Duration(milliseconds: 800),
-            builder: (context, value, child) {
-              return Transform.scale(
-                scale: value,
-                child: Text("$countdown", style: countdownStyle),
-              );
-            },
-          ),
+          child: _buildAnimatedCountdown(countdown ?? 3, fontSize: 120),
         );
         break;
       case 1: // Guessing state
@@ -697,31 +728,32 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
                     crossAxisCount: 2,
                     mainAxisSpacing: kSmallSpacing,
                     crossAxisSpacing: kSmallSpacing,
-                    childAspectRatio: 1.7, // wider buttons, less height
-                    children: players
-                        .map(
-                          (player) => ElevatedButton(
-                            onPressed: () => handleGuess(player),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              foregroundColor: Colors.black,
-                              elevation: 1,
-                              padding: const EdgeInsets.symmetric(vertical: 6),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(24),
-                              ),
-                            ),
-                            child: Text(
-                              player.toUpperCase(),
-                              style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.black,
-                              ),
-                            ),
+                    childAspectRatio: 2, // wider buttons, less height
+                    children: players.asMap().entries.map((entry) {
+                      final index = entry.key;
+                      final player = entry.value;
+
+                      return ElevatedButton(
+                        onPressed: () => handleGuess(player),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          foregroundColor: Colors.black,
+                          elevation: 1,
+                          padding: const EdgeInsets.symmetric(vertical: 6),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(24),
                           ),
-                        )
-                        .toList(),
+                        ),
+                        child: Text(
+                          player.toUpperCase(),
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black,
+                          ),
+                        ),
+                      );
+                    }).toList(),
                   ),
                   SizedBox(height: kDefaultSpacing),
                   Container(
@@ -772,20 +804,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
                   textAlign: TextAlign.center,
                 ),
               SizedBox(height: kSmallSpacing),
-              TweenAnimationBuilder<double>(
-                tween: Tween<double>(begin: 0.5, end: 1.0),
-                duration: Duration(milliseconds: 800),
-                builder: (context, value, child) {
-                  return Transform.scale(
-                    scale: value,
-                    child: Text(
-                      "$countdown",
-                      style: countdownStyle.copyWith(fontSize: 100),
-                      textAlign: TextAlign.center,
-                    ),
-                  );
-                },
-              ),
+              _buildAnimatedCountdown(countdown ?? 5, fontSize: 100),
             ],
           ),
         );
@@ -794,199 +813,212 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
         stateWidget = Container(
           margin: EdgeInsets.symmetric(horizontal: 10),
           child: Column(
-            children: [
-              if (!skippedRound && guessingPlayer != null)
+            children: AnimateList(
+              interval: 100.ms,
+              effects: [
+                FadeEffect(duration: 500.ms, curve: Curves.easeOut),
+                SlideEffect(
+                  begin: const Offset(0, 0.2),
+                  end: Offset.zero,
+                  duration: 500.ms,
+                  curve: Curves.easeOutQuad,
+                ),
+              ],
+              children: [
+                if (!skippedRound && guessingPlayer != null)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "${guessingPlayer!}",
+                        style: subheadingStyle.copyWith(
+                          fontSize: 50,
+                          fontWeight: FontWeight.w900,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                if (!skippedRound && guessingPlayer != null)
+                  Text(
+                    " hat geraten:",
+                    style: subheadingStyle.copyWith(fontSize: 20),
+                    textAlign: TextAlign.center,
+                  ),
+                SizedBox(height: 5),
+
+                SizedBox(height: 30),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(
-                      "${guessingPlayer!}",
+                    if (currentSong?.albumImageUrl != null)
+                      Padding(
+                        padding: const EdgeInsets.only(right: 12),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Image.network(
+                            currentSong!.albumImageUrl!,
+                            width: 80,
+                            height: 80,
+                            fit: BoxFit.cover,
+                            errorBuilder: (_, __, ___) =>
+                                const SizedBox.shrink(),
+                          ),
+                        ),
+                      ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            currentSong?.name ?? "FEHLER",
+                            style: const TextStyle(
+                              fontSize: 26,
+                              fontWeight: FontWeight.bold,
+                              height: 1.3,
+                              color: Colors.white,
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.left,
+                          ),
+
+                          const SizedBox(height: 4),
+                          Text(
+                            currentSong?.artists.join(", ") ?? "FEHLER",
+                            style: const TextStyle(
+                              fontSize: 16,
+                              color: Colors.white70,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.left,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Expanded(child: Divider(color: Colors.white70)),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: Text(
+                        currentSong?.release_date?.split('-').first ??
+                            "NO DATE",
+                        style: const TextStyle(color: Colors.white70),
+                      ),
+                    ),
+                    Expanded(child: Divider(color: Colors.white70)),
+                  ],
+                ),
+                SizedBox(height: kDefaultSpacing),
+                if (lastGuessCorrect != null && guessingPlayer != null)
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      vertical: kSmallPadding,
+                      horizontal: kDefaultPadding,
+                    ),
+                    decoration: const BoxDecoration(color: Colors.transparent),
+                    child: Text(
+                      lastGuessCorrect!
+                          ? "${guessingPlayer!.toUpperCase()} GUESSED CORRECTLY!"
+                          : "${guessingPlayer!.toUpperCase()} GUESSED INCORRECTLY",
                       style: subheadingStyle.copyWith(
-                        fontSize: 50,
-                        fontWeight: FontWeight.w900,
+                        color: Colors.white,
+                        fontSize: 18,
                       ),
                       textAlign: TextAlign.center,
                     ),
-                  ],
-                ),
-              if (!skippedRound && guessingPlayer != null)
-                Text(
-                  " hat geraten:",
-                  style: subheadingStyle.copyWith(fontSize: 20),
-                  textAlign: TextAlign.center,
-                ),
-              SizedBox(height: 5),
-
-              SizedBox(height: 30),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  if (currentSong?.albumImageUrl != null)
-                    Padding(
-                      padding: const EdgeInsets.only(right: 12),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: Image.network(
-                          currentSong!.albumImageUrl!,
-                          width: 80,
-                          height: 80,
-                          fit: BoxFit.cover,
-                          errorBuilder: (_, __, ___) => const SizedBox.shrink(),
-                        ),
-                      ),
-                    ),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          currentSong?.name ?? "FEHLER",
-                          style: const TextStyle(
-                            fontSize: 26,
-                            fontWeight: FontWeight.bold,
-                            height: 1.3,
-                            color: Colors.white,
+                  ),
+                SizedBox(height: kDefaultSpacing),
+                if (lastGuessCorrect == null)
+                  Column(
+                    children: [
+                      if (!skippedRound) ...[
+                        ElevatedButton(
+                          onPressed: () => handleGuessResult(true, false),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            foregroundColor: Colors.black,
+                            elevation: 1,
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            minimumSize: const Size(double.infinity, 56),
                           ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.left,
-                        ),
-
-                        const SizedBox(height: 4),
-                        Text(
-                          currentSong?.artists.join(", ") ?? "FEHLER",
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: Colors.white70,
+                          child: const Text(
+                            "RICHTIG GERATEN",
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black,
+                            ),
                           ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.left,
+                        ),
+                        SizedBox(height: kDefaultSpacing),
+                        ElevatedButton(
+                          onPressed: () => handleGuessResult(false, false),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            foregroundColor: Colors.black,
+                            elevation: 1,
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            minimumSize: const Size(double.infinity, 56),
+                          ),
+                          child: const Text(
+                            "LEIDER FALSCH",
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                      ] else ...[
+                        ElevatedButton(
+                          onPressed: () => handleGuessResult(false, true),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            foregroundColor: Colors.black,
+                            elevation: 1,
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            minimumSize: const Size(double.infinity, 56),
+                          ),
+                          child: const Text(
+                            "WEITER",
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black,
+                            ),
+                          ),
                         ),
                       ],
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(child: Divider(color: Colors.white70)),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    child: Text(
-                      currentSong?.release_date?.split('-').first ?? "NO DATE",
-                      style: const TextStyle(color: Colors.white70),
-                    ),
-                  ),
-                  Expanded(child: Divider(color: Colors.white70)),
-                ],
-              ),
-              SizedBox(height: kDefaultSpacing),
-              if (lastGuessCorrect != null && guessingPlayer != null)
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    vertical: kSmallPadding,
-                    horizontal: kDefaultPadding,
-                  ),
-                  decoration: const BoxDecoration(color: Colors.transparent),
-                  child: Text(
-                    lastGuessCorrect!
-                        ? "${guessingPlayer!.toUpperCase()} GUESSED CORRECTLY!"
-                        : "${guessingPlayer!.toUpperCase()} GUESSED INCORRECTLY",
-                    style: subheadingStyle.copyWith(
-                      color: Colors.white,
-                      fontSize: 18,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              SizedBox(height: kDefaultSpacing),
-              if (lastGuessCorrect == null)
-                Column(
-                  children: [
-                    if (!skippedRound) ...[
-                      ElevatedButton(
-                        onPressed: () => handleGuessResult(true),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          foregroundColor: Colors.black,
-                          elevation: 1,
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          minimumSize: const Size(double.infinity, 56),
-                        ),
-                        child: const Text(
-                          "RICHTIG GERATEN",
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
                       SizedBox(height: kDefaultSpacing),
-                      ElevatedButton(
-                        onPressed: () => handleGuessResult(false),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          foregroundColor: Colors.black,
-                          elevation: 1,
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          minimumSize: const Size(double.infinity, 56),
-                        ),
-                        child: const Text(
-                          "LEIDER FALSCH",
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                    ] else ...[
-                      ElevatedButton(
-                        onPressed: () => handleGuessResult(false),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          foregroundColor: Colors.black,
-                          elevation: 1,
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          minimumSize: const Size(double.infinity, 56),
-                        ),
-                        child: const Text(
-                          "WEITER",
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
+                      buildScoreBoard(),
                     ],
-                    SizedBox(height: kDefaultSpacing),
-                    buildScoreBoard(),
-                  ],
-                )
-              else
-                buildScoreBoard(),
-            ],
+                  )
+                else
+                  buildScoreBoard(),
+              ],
+            ),
           ),
         );
-
         break;
       case 5: // Game over state
         stateWidget = Container(
-          padding: EdgeInsets.all(kLargePadding),
-          margin: EdgeInsets.symmetric(horizontal: kDefaultPadding),
+          padding: EdgeInsets.symmetric(vertical: kLargePadding),
+          margin: EdgeInsets.zero,
           decoration: BoxDecoration(
             color: Colors.transparent,
             border: Border.all(color: Colors.transparent, width: 0),
@@ -1101,39 +1133,6 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
               ],
             ),
           ),
-        ),
-      ),
-    );
-  }
-
-  static Widget _playerRow(String name, int points) {
-    return Material(
-      color: Colors.transparent,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-        child: Row(
-          children: [
-            Expanded(
-              child: Text(
-                name,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black,
-                ),
-              ),
-            ),
-            Text(
-              "$points",
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-                color: Colors.black,
-              ),
-            ),
-            const SizedBox(width: 8),
-            const Icon(Icons.edit, color: Colors.black38, size: 22),
-          ],
         ),
       ),
     );

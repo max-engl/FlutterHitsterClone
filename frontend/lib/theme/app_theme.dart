@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  // Text Styles
   static final TextStyle headingStyle = TextStyle(
     fontSize: 28,
     fontWeight: FontWeight.w800,
@@ -36,7 +35,6 @@ class AppTheme {
     color: Colors.black,
   );
 
-  // Spacing Constants
   static const double kDefaultPadding = 10.0;
   static const double kLargePadding = 40.0;
   static const double kSmallPadding = 16.0;
@@ -44,21 +42,19 @@ class AppTheme {
   static const double kLargeSpacing = 50.0;
   static const double kSmallSpacing = 20.0;
 
-  // Button Styles
   static final ButtonStyle primaryButtonStyle = ElevatedButton.styleFrom(
     backgroundColor: Color.fromRGBO(93, 202, 151, 1),
     foregroundColor: Colors.white,
     padding: const EdgeInsets.symmetric(vertical: kDefaultPadding),
     shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.all(Radius.circular(17)), // Sharp edges
+      borderRadius: BorderRadius.all(Radius.circular(17)),
     ),
-    elevation: 4, // Drop shadow added
-    shadowColor: Colors.black.withOpacity(.4),
-    minimumSize: const Size(double.infinity, 60), // Ensure consistent height
+    elevation: 4,
+    shadowColor: Colors.black.withValues(alpha: 0.4),
+    minimumSize: const Size(double.infinity, 60),
   );
   static final ButtonStyle secondaryButtonStyle = primaryButtonStyle;
 
-  // Container Styles
   static BoxDecoration containerDecoration({
     bool isHighlighted = false,
     bool isDark = false,
@@ -69,7 +65,6 @@ class AppTheme {
     );
   }
 
-  // App Theme
   static ThemeData getTheme() {
     return ThemeData(
       colorScheme: ColorScheme.light(
